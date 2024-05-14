@@ -58,13 +58,13 @@
 /* header css start */
 .pcoded-header {
   z-index: 1028;
-  position: relative;
+  position: fixed;
   display: flex;
   min-height: $header-height;
   padding: 0;
-  position: relative;
   top: 0;
-  background: transparent;
+  background-color:  rgba(256, 256, 256, 0.7);
+  backdrop-filter: blur(7px);
   color: $header-light-text-color;
   width: calc(100% - #{$Menu-width});
   margin-left: $Menu-width;
@@ -118,11 +118,12 @@
       }
 
       &:first-child {
-        padding-left: 25px;
+        padding-left: 30px;
       }
 
       &:last-child {
         padding-right: 40px;
+        padding-left: 0;
       }
     }
   }
@@ -440,21 +441,19 @@
 /* menu[ vertical ] css start */
 .mobile-menu {
   display: flex;
+  position: absolute;
+  top: 0;
   align-items: center;
   justify-content: center;
-  width: 37px;
+  width: 15px;
   height: $header-height;
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 0 10px;
 
   span {
     position: relative;
     display: block;
     width: 100%;
-    height: 2.8px;
-    background-color: #fff;
+    height: 2px;
+    background-color: $menu-dark-background;
     transition: all 0.3s ease-in-out;
     backface-visibility: hidden;
     border-radius: 2px;
@@ -464,8 +463,8 @@
       content: '';
       position: absolute;
       left: 0;
-      height: 2.8px;
-      background-color: #fff;
+      height: 2px;
+      background-color: $menu-dark-background;
       transition: all 0.3s;
       backface-visibility: hidden;
       border-radius: 2px;
@@ -473,32 +472,12 @@
 
     &:after {
       top: 5px;
-      width: 70%;
+      width: 100%;
     }
 
     &:before {
       top: -5px;
-      width: 40%;
-    }
-  }
-
-  &.on {
-    span {
-      background-color: transparent;
-
-      &:after,
-      &:before {
-        height: 2px;
-        width: 100%;
-      }
-
-      &:before {
-        transform: rotate(45deg) translate(4px, 4px);
-      }
-
-      &:after {
-        transform: rotate(-45deg) translate(3px, -3px);
-      }
+      width: 100%;
     }
   }
 }
@@ -514,11 +493,8 @@
     content: '';
     transition: all 0.3s ease-in-out;
   }
-
-  @media screen and (max-width: 991px) {
-    .pcoded-content .pcoded-inner-content {
-      margin-top: 70px;
-    }
+  .pcoded-content .pcoded-inner-content {
+    margin-top: $header-height;
   }
 }
 
@@ -533,6 +509,13 @@
     padding-left: 0;
     list-style: none;
     margin-bottom: 0;
+
+    .label {
+      margin: 0;
+      margin-right: 10px;
+      padding: 5px;
+      font-size: .7rem;
+    }
   }
 
   .datta-scroll.navbar-content {
@@ -811,6 +794,7 @@
 
     .header-logo {
       width: $Menu-collapsed-width;
+      padding: $Menu-collapsed-width;
 
       img {
         transform: rotateY(-90deg);
@@ -824,6 +808,10 @@
         transform-origin: 0 0;
         opacity: 1;
         left: calc((#{$Menu-collapsed-width} / 2) - 20px);
+      }
+
+      .b-bg, .b-brand {
+        width: $Menu-collapsed-width;
       }
 
       .mobile-menu {
@@ -920,7 +908,7 @@
     }
 
     ~ .pcoded-header {
-      width: calc(100% - #{$Menu-collapsed-width});
+      width: 100%;
     }
 
     ~ .pcoded-header,
@@ -1135,6 +1123,36 @@
   transition: all 0.3s ease-in-out;
 }
 
+/* footer style */
+.pcoded-footer {
+  z-index: 1028;
+  padding: 0;
+  background: transparent;
+  color: $header-light-text-color;
+  width: calc(100% - #{$Menu-width});
+  margin-left: $Menu-width;
+  transition: all 0.3s ease-in-out;
+
+  > div {
+    padding: 0 1rem;
+  }
+  .footer-bottom {
+    padding: .5rem 1rem;
+    margin-top: 1rem;
+    background-color: #fff;
+    border-top: 1px solid $theme-border;
+
+    a {
+      color: $header-light-text-color;
+    }
+  }
+
+  .footer-image {
+    height: 33px; 
+    object-fit: contain;
+  }
+}
+
 /* main content end*/
 /* ==========================    Rsponsive Menu  start   ====================== */
 .mob-toggler {
@@ -1143,7 +1161,7 @@
 
 @media only screen and (max-width: 991px) {
   .pcoded-header {
-    background: $header-dark-background;
+    background: $theme-background;
     color: $header-dark-text-color;
 
     .input-group-text,
@@ -1157,9 +1175,7 @@
     }
 
     > .collapse.show {
-      display: flex;
-      background: #fff;
-      box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+      display: none;
     }
 
     .mob-toggler {
@@ -1177,17 +1193,36 @@
 
     .m-header {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
       width: 100%;
+      padding-right: 20px;
       height: $header-height;
 
+      .m-header-title {
+        margin-left: 50px !important;
+      }
+
       .b-brand {
-        margin-left: 20px;
+        margin-left: 10px;
       }
 
       .mobile-menu {
-        right: 20px;
+        left: 20px;
+
+        span {
+          margin-left: 0 !important;
+        }
+      }
+
+      span {
+        margin-left: 10px;
+      }
+
+      .pcoded-header {
+        .dropdown {
+          height: 95px;
+        }
       }
     }
 
@@ -1220,11 +1255,10 @@
     }
 
     ~ .pcoded-header {
+      position: fixed;
       width: 100%;
-    }
-
-    .navbar-brand {
-      display: none;
+      background-color:  rgba(256, 256, 256, 0.7);
+      backdrop-filter: blur(7px);
     }
 
     &.mob-open {
@@ -1235,6 +1269,11 @@
         margin-left: 0;
       }
     }
+  }
+
+  .pcoded-footer {
+    width: 100%;
+    margin-left: $Menu-collapsed-width;
   }
 }
 
@@ -1284,6 +1323,14 @@
         margin-right: auto;
         left: 0;
         right: 0;
+      }
+    }
+
+    .m-header {
+      .drp-user {
+        span {
+          display: none;
+        }
       }
     }
   }

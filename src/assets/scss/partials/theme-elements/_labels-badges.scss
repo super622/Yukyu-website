@@ -1,3 +1,4 @@
+@import '../mixins/badge';
 /**  =====================
       Label & Badges css start
 ==========================  **/
@@ -15,6 +16,12 @@
       background: nth($color-bt-color, $i);
       color: #ffffff;
     }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .bg-#{$color} {
+    @include badge-variant-pc($value);
   }
 }
 /**====== Label & Badges css end ======**/

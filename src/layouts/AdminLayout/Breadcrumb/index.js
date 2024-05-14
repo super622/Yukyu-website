@@ -25,7 +25,7 @@ const Breadcrumb = () => {
       item.children.filter((collapse) => {
         if (collapse.type && collapse.type === 'collapse') {
           getCollapse(collapse, index);
-        } else if (collapse.type && collapse.type === 'item') {
+        } else {
           if (location.pathname === collapse.url) {
             setMain(item);
             setItem(collapse);
@@ -48,7 +48,7 @@ const Breadcrumb = () => {
     );
   }
 
-  if (item && item.type === 'item') {
+  if (item && (item.type === 'item' || item.type === '')) {
     title = item.title;
     itemContent = (
       <ListGroup.Item as="li" bsPrefix=" " className="breadcrumb-item">

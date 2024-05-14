@@ -98,6 +98,38 @@ label {
   background: $theme-color2;
 }
 
+.event-demo-wrap {
+  flex-wrap: wrap;
+
+  .event-demo {
+    width: 20px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 5px;
+    display: inline-block;
+  }
+
+  .all {
+    background-color: #75b5fb;
+  }
+
+  .half {
+    background-color: #fcd574;
+  }
+
+  .many {
+    background-color: #75fb8f;
+  }
+
+  .little {
+    background-color: #f99dbe;
+  }
+
+  .absent {
+    background-color: #748892;
+  }
+}
+
 /* ==========  card css start  =========== */
 
 .anim-rotate {
@@ -135,28 +167,18 @@ p.text-muted {
   .card-header {
     background-color: transparent;
     border-bottom: 1px solid #f1f1f1;
-    padding: 20px 25px;
+    padding: 20px;
     position: relative;
 
     h5 {
       margin-bottom: 0;
       color: #000;
       font-size: 17px;
-      font-weight: 400;
+      font-weight: 600;
       display: inline-block;
       margin-right: 10px;
       line-height: 1.1;
       position: relative;
-
-      &:after {
-        content: '';
-        background-color: $primary-color;
-        position: absolute;
-        left: -25px;
-        top: 0;
-        width: 4px;
-        height: 20px;
-      }
     }
 
     &.borderless {
@@ -220,7 +242,11 @@ p.text-muted {
 
   .card-block,
   .card-body {
-    padding: 30px 25px;
+    padding: 20px;
+
+    h5 {
+      color: $theme-font-color;
+    }
   }
 
   &.card-load {
@@ -272,7 +298,6 @@ p.text-muted {
 
   &.show {
     &:before {
-      content: '\63';
       font-family: 'pct';
       position: absolute;
       left: 115px;
@@ -1007,4 +1032,65 @@ p.text-muted {
     color: $yiq-light-color !important;
     filter: invert(1) grayscale(100%) brightness(200%) !important;
   }
+}
+
+.form-item {
+  label {
+    padding-top: 0.5rem;
+  }
+}
+
+.border-end {
+  border-right: 1px solid $theme-border;
+}
+
+.required{
+  &::after {
+    display: inline-block;
+    content: "\5FC5\9808";
+    background-color: #e65d65;
+    color: #fff;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    border-radius: 0.25rem;
+    margin-left: 10px;
+    margin-top: 2px;
+    vertical-align: text-top;
+  }
+}
+
+.help-title {
+  margin: 0;
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none;
+  color: $theme-font-color !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.user-check-item {
+  .form-check {
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .joining-date-style {
+    font-size: 12px;
+    padding-left: 1.5em;
+  }
+}
+
+.center-card {
+  margin: auto;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #59ac4c;
+  margin-top: 5px;
 }

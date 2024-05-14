@@ -1,17 +1,138 @@
 const menuItems = {
   items: [
     {
-      id: 'navigation',
-      title: 'Navigation',
+      id: 'admin-menu',
+      title: '管理者メニュー',
       type: 'group',
       icon: 'icon-navigation',
       children: [
         {
-          id: 'dashboard',
-          title: 'Dashboard',
+          id: 'admin-home',
+          title: '管理者ホーム',
           type: 'item',
           icon: 'feather icon-home',
-          url: '/app/dashboard/default'
+          badge: {
+            title: '',
+            type: 'label-info feather icon-unlock rounded-pill'
+          },
+          url: '/dashboard'
+        },
+        {
+          id: 'employee-management',
+          title: '従業員管理',
+          type: 'collapse',
+          icon: 'feather icon-user',
+          badge: {
+            title: '',
+            type: 'label-info feather icon-unlock rounded-pill'
+          },
+          url: '/employee',
+          children: [
+            {
+              id: 'department',
+              title: '部署',
+              type: 'item',
+              url: '/department'
+            },
+            {
+              id: 'adddepartment',
+              title: '部署追加',
+              type: '',
+              url: '/department/create'
+            },
+            {
+              id: 'employee',
+              title: '従業員',
+              type: 'item',
+              url: '/employee'
+            },
+            {
+              id: 'addemployee',
+              title: '従業員追加',
+              type: '',
+              url: '/employee/create'
+            }
+          ]
+        },
+        {
+          id: 'leave-management',
+          title: '休暇管理',
+          type: 'collapse',
+          icon: 'feather icon-flag',
+          badge: {
+            title: '',
+            type: 'label-info feather icon-unlock rounded-pill'
+          },
+          url: '/dashboard',
+          children: [
+            {
+              id: 'treat-single',
+              title: '個別付与・消化',
+              type: 'item',
+              url: '/basic/treat-single'
+            },
+            {
+              id: 'treat-multiple',
+              title: '一斉付与・消化',
+              type: 'item',
+              url: '/treat_multiple'
+            },
+            {
+              id: 'management-book',
+              title: '年次有給休暇管理簿',
+              type: 'item',
+              url: '/basic/management-book'
+            },
+            {
+              id: 'overall-history',
+              title: '全体取得履歴',
+              type: 'item',
+              url: '/overall_history'
+            },
+            {
+              id: 'obligation',
+              title: '有休消化義務チェック',
+              type: 'item',
+              url: '/basic/obligation'
+            },
+            {
+              id: 'used-day-book',
+              title: '休暇取得記録表',
+              type: 'item',
+              url: '/basic/used-day-book'
+            },
+            {
+              id: 'used-day-requests',
+              title: '休暇申請の承認',
+              type: 'item',
+              url: '/approve'
+            }
+          ]
+        },
+        {
+          id: 'vacation-settings',
+          title: '休暇設定',
+          type: 'collapse',
+          icon: 'feather icon-settings',
+          badge: {
+            title: '',
+            type: 'label-info feather icon-unlock rounded-pill'
+          },
+          url: '/dashboard',
+          children: [
+            {
+              id: 'settings',
+              title: '有休設定',
+              type: 'item',
+              url: '/settings'
+            },
+            {
+              id: 'special-items',
+              title: '特休設定',
+              type: 'item',
+              url: '/special_items'
+            }
+          ]
         }
       ]
     },

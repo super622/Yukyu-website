@@ -57,8 +57,53 @@ const routes = [
     routes: [
       {
         exact: 'true',
-        path: '/app/dashboard/default',
+        path: '/dashboard',
         element: lazy(() => import('./views/dashboard'))
+      },
+      {
+        exact: 'true',
+        path: '/employee',
+        element: lazy(() => import('./views/employee/employee'))
+      },
+      {
+        exact: 'true',
+        path: '/employee/create',
+        element: lazy(() => import('./views/employee/createEmployee'))
+      },
+      {
+        exact: 'true',
+        path: '/department',
+        element: lazy(() => import('./views/employee/department'))
+      },
+      {
+        exact: 'true',
+        path: '/department/create',
+        element: lazy(() => import('./views/employee/createDepartment'))
+      },
+      {
+        exact: 'true',
+        path: '/settings',
+        element: lazy(() => import('./views/vacationSetting/paidHoliday'))
+      },
+      {
+        exact: 'true',
+        path: '/special_items',
+        element: lazy(() => import('./views/vacationSetting/specialHoliday'))
+      },
+      {
+        exact: 'true',
+        path: '/approve',
+        element: lazy(() => import('./views/leavemanagement/approvalofleaverequest'))
+      },
+      {
+        exact: 'true',
+        path: '/treat_multiple',
+        element: lazy(() => import('./views/allocatedigestall'))
+      },
+      {
+        exact: 'true',
+        path: '/overall_history',
+        element: lazy(() => import('./views/entireacquisitionhistory'))
       },
       {
         exact: 'true',

@@ -1,0 +1,8 @@
+@mixin badge-variant-pc(
+  $background,
+  $hover-background: darken($background, 7.5%),
+  $active-background: darken($background, 10%),
+) {
+  color: color-yiq($background);
+  background-color: $background !important;
+}

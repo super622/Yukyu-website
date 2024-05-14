@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import Navigation from './Navigation';
 import NavBar from './NavBar';
 import Breadcrumb from './Breadcrumb';
+import Footer from './Footer';
 
 import useWindowSize from '../../hooks/useWindowSize';
 import useOutsideClick from '../../hooks/useOutsideClick';
@@ -96,6 +97,7 @@ const AdminLayout = ({ children }) => {
     <React.Fragment>
       {common}
       {mainContainer}
+      <Footer />
     </React.Fragment>
   );
 };
