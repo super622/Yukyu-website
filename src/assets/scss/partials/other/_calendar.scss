@@ -299,19 +299,12 @@
 
 .fc .fc-scroller {
     -webkit-overflow-scrolling: touch;
-    position: relative
+    position: relative;
+    overflow: visible !important;
 }
 
 .fc .fc-scroller-liquid {
     height: 100%
-}
-
-.fc .fc-scroller-liquid-absolute {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0
 }
 
 .fc .fc-scroller-harness {
@@ -406,17 +399,14 @@
     position: sticky
 }
 
-.fc .fc-view-harness {
-    flex-grow: 1;
-    position: relative
+.fc .fc-view-harness-active > .fc-view {
+    position: relative !important;
 }
 
-.fc .fc-view-harness-active>.fc-view {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0
+.fc .fc-view-harness {
+    height: 100% !important;
+    flex-grow: 1;
+    position: relative
 }
 
 .fc .fc-col-header-cell-cushion {

@@ -72,8 +72,23 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/remaining_days/form',
+        element: lazy(() => import('./views/employee/remainingDaysForm'))
+      },
+      {
+        exact: 'true',
         path: '/department',
         element: lazy(() => import('./views/employee/department'))
+      },
+      {
+        exact: 'true',
+        path: '/department/:id',
+        element: lazy(() => import('./views/employee/showDepartment'))
+      },
+      {
+        exact: 'true',
+        path: '/department/edit/:id',
+        element: lazy(() => import('./views/employee/editDepartment'))
       },
       {
         exact: 'true',
@@ -87,28 +102,73 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/settings/rule_edit',
+        element: lazy(() => import('./views/vacationSetting/ruleEdit'))
+      },
+      {
+        exact: 'true',
+        path: '/settings/annual_edit',
+        element: lazy(() => import('./views/vacationSetting/annualEdit'))
+      },
+      {
+        exact: 'true',
+        path: '/special_items/create',
+        element: lazy(() => import('./views/vacationSetting/createSpecialHoliday'))
+      },
+      {
+        exact: 'true',
+        path: '/special_items/:id',
+        element: lazy(() => import('./views/vacationSetting/showSpecialHoliday'))
+      },
+      {
+        exact: 'true',
+        path: '/special_item/edit/:id',
+        element: lazy(() => import('./views/vacationSetting/editSpecialHoliday'))
+      },
+      {
+        exact: 'true',
         path: '/special_items',
         element: lazy(() => import('./views/vacationSetting/specialHoliday'))
       },
       {
         exact: 'true',
-        path: '/approve',
+        path: '/used_day_requests',
         element: lazy(() => import('./views/leavemanagement/approvalofleaverequest'))
       },
       {
         exact: 'true',
+        path: '/used_day_requests/show/:id',
+        element: lazy(() => import('./views/leavemanagement/showApproveleaverequest'))
+      },
+      {
+        exact: 'true',
         path: '/treat_multiple',
-        element: lazy(() => import('./views/allocatedigestall'))
+        element: lazy(() => import('./views/leavemanagement/allocatedigestall'))
       },
       {
         exact: 'true',
         path: '/overall_history',
-        element: lazy(() => import('./views/entireacquisitionhistory'))
+        element: lazy(() => import('./views/leavemanagement/entireacquisitionhistory'))
       },
       {
         exact: 'true',
-        path: '/basic/button',
-        element: lazy(() => import('./views/ui-elements/basic/BasicButton'))
+        path: '/treat_single',
+        element: lazy(() => import('./views/leavemanagement/individualgrantextinguishment'))
+      },
+      {
+        exact: 'true',
+        path: '/management_book',
+        element: lazy(() => import('./views/leavemanagement/paidleavmanagebook'))
+      },
+      {
+        exact: 'true',
+        path: '/obligation',
+        element: lazy(() => import('./views/leavemanagement/paidleavecheck'))
+      },
+      {
+        exact: 'true',
+        path: '/used_day_book',
+        element: lazy(() => import('./views/leavemanagement/leaveacquisitionrecord'))
       },
       {
         exact: 'true',

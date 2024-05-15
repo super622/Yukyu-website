@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ListGroup, Dropdown, Card } from 'react-bootstrap';
+import { ListGroup, Dropdown, Card, Badge } from 'react-bootstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
 
@@ -8,27 +8,27 @@ import NavRight from './NavRight';
 import { ConfigContext } from '../../../contexts/ConfigContext';
 import * as actionType from '../../../store/actions';
 
-import avatar1 from '../../../assets/images/user/avatar-1.jpg';
-const notiData = [
-  {
-    name: 'Joseph William',
-    image: avatar1,
-    details: 'Purchase New Theme and make payment',
-    activity: '30 min'
-  },
-  {
-    name: 'Sara Soudein',
-    image: avatar1,
-    details: 'currently login',
-    activity: '30 min'
-  },
-  {
-    name: 'Suzen',
-    image: avatar1,
-    details: 'Purchase New Theme and make payment',
-    activity: 'yesterday'
-  }
-];
+import avatar1 from '../../../assets/images/user/avatar-2.jpg';
+// const notiData = [
+//   {
+//     name: 'Joseph William',
+//     image: avatar1,
+//     details: 'Purchase New Theme and make payment',
+//     activity: '30 min'
+//   },
+//   {
+//     name: 'Sara Soudein',
+//     image: avatar1,
+//     details: 'currently login',
+//     activity: '30 min'
+//   },
+//   {
+//     name: 'Suzen',
+//     image: avatar1,
+//     details: 'Purchase New Theme and make payment',
+//     activity: 'yesterday'
+//   }
+// ];
 
 const NavBar = () => {
   const configContext = useContext(ConfigContext);
@@ -58,27 +58,45 @@ const NavBar = () => {
           <span />
         </Link>
         <span className="m-header-title">株式会社向陽プランニング</span>
-        {/* <Badge bg={"secondary"} className={"rounded-pill"}>
+        <Badge bg={'secondary'} className={'rounded-pill'}>
           フリープラン
-        </Badge> */}
+        </Badge>
         <Dropdown align="start">
           <Dropdown.Toggle as={Link} variant="link" to="#" id="dropdown-basic">
             <i className="feather icon-bell icon" />
           </Dropdown.Toggle>
           <Dropdown.Menu align="end" className="notification notification-scroll">
             <div className="noti-head">
-              <h6 className="d-inline-block m-b-0">Notifications</h6>
+              <h6 className="d-inline-block m-b-0">通知</h6>
               <div className="float-end">
                 <Link to="#" className="me-2">
-                  mark as read
+                  既読にする
                 </Link>
-                <Link to="#">clear all</Link>
+                <Link to="#">すべてクリア</Link>
               </div>
             </div>
             <PerfectScrollbar>
               <ListGroup as="ul" bsPrefix=" " variant="flush" className="noti-body">
-                <ListGroup.Item as="li" bsPrefix=" " className="n-title">
+                {/* <ListGroup.Item as="li" bsPrefix=" " className="n-title">
                   <p className="m-b-0">NEW</p>
+                </ListGroup.Item> */}
+                <ListGroup.Item as="li" bsPrefix=" " className="notification">
+                  <Card
+                    className="d-flex align-items-center shadow-none mb-0 p-0"
+                    style={{ flexDirection: 'row', backgroundColor: 'unset' }}
+                  >
+                    <img className="img-radius" src={avatar1} alt="Generic placeholder" />
+                    <Card.Body className="p-0">
+                      <p>
+                        <strong>藤村</strong>
+                        <span className="n-time text-muted">
+                          <i className="icon feather icon-clock me-2" />
+                          30 分
+                        </span>
+                      </p>
+                      <p>新規チケット追加</p>
+                    </Card.Body>
+                  </Card>
                 </ListGroup.Item>
                 <ListGroup.Item as="li" bsPrefix=" " className="notification">
                   <Card
@@ -88,17 +106,17 @@ const NavBar = () => {
                     <img className="img-radius" src={avatar1} alt="Generic placeholder" />
                     <Card.Body className="p-0">
                       <p>
-                        <strong>John Doe</strong>
+                        <strong>藤村</strong>
                         <span className="n-time text-muted">
                           <i className="icon feather icon-clock me-2" />
-                          30 min
+                          30 分
                         </span>
                       </p>
-                      <p>New ticket Added</p>
+                      <p>新規チケット追加</p>
                     </Card.Body>
                   </Card>
                 </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" " className="n-title">
+                {/* <ListGroup.Item as="li" bsPrefix=" " className="n-title">
                   <p className="m-b-0">EARLIER</p>
                 </ListGroup.Item>
                 {notiData.map((data, index) => {
@@ -122,12 +140,12 @@ const NavBar = () => {
                       </Card>
                     </ListGroup.Item>
                   );
-                })}
+                })} */}
               </ListGroup>
             </PerfectScrollbar>
-            <div className="noti-footer">
+            {/* <div className="noti-footer">
               <Link to="#">show all</Link>
-            </div>
+            </div> */}
           </Dropdown.Menu>
         </Dropdown>
         <Dropdown align="start" className="drp-user">
@@ -139,27 +157,17 @@ const NavBar = () => {
             <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
               <ListGroup.Item as="li" bsPrefix=" ">
                 <Link to="#" className="dropdown-item">
-                  <i className="feather icon-settings" /> Settings
+                  <i className="feather icon-user" /> マイページ
+                </Link>
+              </ListGroup.Item>
+              <ListGroup.Item as="li" bsPrefix=" ">
+                <Link to="https://yukyu-note.com/" className="dropdown-item">
+                  <i className="feather icon-globe" /> WEBサイト
                 </Link>
               </ListGroup.Item>
               <ListGroup.Item as="li" bsPrefix=" ">
                 <Link to="#" className="dropdown-item">
-                  <i className="feather icon-user" /> Profile
-                </Link>
-              </ListGroup.Item>
-              <ListGroup.Item as="li" bsPrefix=" ">
-                <Link to="#" className="dropdown-item">
-                  <i className="feather icon-mail" /> My Messages
-                </Link>
-              </ListGroup.Item>
-              <ListGroup.Item as="li" bsPrefix=" ">
-                <Link to="#" className="dropdown-item">
-                  <i className="feather icon-lock" /> Lock Screen
-                </Link>
-              </ListGroup.Item>
-              <ListGroup.Item as="li" bsPrefix=" ">
-                <Link to="#" className="dropdown-item">
-                  <i className="feather icon-log-out" /> Logout
+                  <i className="feather icon-log-out" /> ログアウト
                 </Link>
               </ListGroup.Item>
             </ListGroup>

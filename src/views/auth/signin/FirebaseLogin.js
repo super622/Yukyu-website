@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Row, Col, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Button, Alert, Form } from 'react-bootstrap';
 
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -52,39 +52,20 @@ const FirebaseLogin = ({ className, ...rest }) => {
               </Col>
             )}
 
-            <div className="custom-control custom-checkbox  text-start mb-4 mt-2">
-              <input type="checkbox" className="custom-control-input" id="customCheck1" />
-              <label className="custom-control-label" htmlFor="customCheck1">
-                Save credentials.
-              </label>
-            </div>
+            <Form.Group className="form-group d-flex justify-content-center">
+              <Form.Check type={'checkbox'} id={'checkbox'} name="group1" label={'ログイン状態を保持する'} />
+            </Form.Group>
 
             <Row>
-              <Col mt={2}>
-                <Button className="btn-block" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
-                  Signin
+              <Col mt={2} className="text-center">
+                <Button href="/dashboard" className="btn-block mb-4" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
+                  ログイン
                 </Button>
               </Col>
             </Row>
           </form>
         )}
       </Formik>
-
-      <Row>
-        <Col sm={12}>
-          <h5 className="my-3"> OR </h5>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col sm={12}>
-          <Button variant="danger">
-            <i className="fa fa-lock" /> Sign in with Google
-          </Button>
-        </Col>
-      </Row>
-
-      <hr />
     </React.Fragment>
   );
 };

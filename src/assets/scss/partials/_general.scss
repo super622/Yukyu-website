@@ -245,7 +245,7 @@ p.text-muted {
     padding: 20px;
 
     h5 {
-      color: $theme-font-color;
+      // color: $theme-font-color;
     }
   }
 
@@ -1093,4 +1093,112 @@ p.text-muted {
   font-size: 0.8rem;
   color: #59ac4c;
   margin-top: 5px;
+}
+
+.preset_life_bottom {
+  margin-right: 10px;
+  vertical-align: sub;
+  padding-top: 20px;
+}
+
+.swal2-cancel {
+  color: #555 !important;
+}
+
+.user-list {
+  border-top: 1px solid #ddd;
+  background-color: #686868;
+
+  a {
+    color: $theme-font-color;
+  }
+
+  .active.user-list-row {
+    background-color: #ccf2f8;
+  }
+
+  .user-list-row {
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    background-color: white;
+  }
+}
+
+.user-detail-name {
+  word-break: break-all;
+  font-size: 44px;
+  color: #111;
+}
+
+.user-detail-kana {
+  word-break: break-all;
+  margin-bottom: 1rem;
+}
+
+.text-green-300 {
+  color: #77f2d3;
+}
+
+.f-40 {
+  font-size: 40px;
+}
+
+.history-media-menu {
+  display: none;
+}
+
+.history-mobile-menu {
+  float: right;
+  display: block;
+}
+
+.media-menu-content {
+  &:hover {
+    background-color: #bbffe8;
+  }
+}
+
+@media screen and (min-width: 490px) {
+  .history-media-menu {
+      float: right;
+      display: block;
+  }
+
+  .history-mobile-menu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 530px) {
+  .team-position {
+      float: right;
+  }
+}
+
+.label-b-0 {
+  label {
+    margin-bottom: 0 !important;
+  }
+}
+
+.color-sat {
+  color: #0059ff
+}
+
+.color-sun {
+  color: #ff0257
+}
+
+.center td {
+  vertical-align: middle
+}
+
+.rs-input {
+  padding: 10px 20px !important;
 }

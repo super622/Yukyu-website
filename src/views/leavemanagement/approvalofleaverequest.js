@@ -112,7 +112,7 @@ const ApprovalOfLeaveRequest = () => {
                     </Td>
                     <Td>
                       <div>
-                        <Button variant={'warning'} className="text-capitalize" size="sm">
+                        <Button href="/used_day_requests/show/123" variant={'warning'} className="text-capitalize" size="sm">
                           詳細
                         </Button>
                       </div>

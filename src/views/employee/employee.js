@@ -165,10 +165,10 @@ const Employee = () => {
                     </Td>
                     <Td>
                       <div>
-                        <Button variant={'success'} className="text-capitalize" size="sm">
+                        <Button href="/treat_single" variant={'success'} className="text-capitalize" size="sm">
                           休暇管理
                         </Button>
-                        <Button variant={'primary'} className="text-capitalize" size="sm">
+                        <Button href="/remaining_days/form" variant={'primary'} className="text-capitalize" size="sm">
                           残り有休日数を設定
                         </Button>
                       </div>

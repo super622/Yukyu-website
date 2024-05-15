@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Col, Row, Card } from 'react-bootstrap';
+import { Button, Col, Row, Card, Badge } from 'react-bootstrap';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
+const flag = true;
 const SpecialHolidaySetting = () => {
   return (
     <React.Fragment>
@@ -17,7 +18,7 @@ const SpecialHolidaySetting = () => {
       </Row>
       <Row>
         <Col sm={12} md={12}>
-          <Button variant={'primary'} className="text-capitalize">
+          <Button href="/special_items/create" variant={'primary'} className="text-capitalize">
             新規作成
           </Button>
         </Col>
@@ -26,31 +27,42 @@ const SpecialHolidaySetting = () => {
         <Col sm={12} md={12}>
           <Card>
             <Card.Body>
-              <Table>
-                <Thead>
-                  <Tr>
-                    <Th>優先度</Th>
-                    <Th>特休名</Th>
-                    <Th>ステータス</Th>
-                    <Th>消化超過のお知らせ</Th>
-                    <Th>有効期限</Th>
-                    <Th>操作</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td></Td>
-                  </Tr>
-                </Tbody>
-              </Table>
-              <h6 className="p-10" style={{ color: '#888' }}>
-                対象のデータがありません
-              </h6>
+              {flag ? (
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th>優先度</Th>
+                      <Th>特休名</Th>
+                      <Th>ステータス</Th>
+                      <Th>消化超過のお知らせ</Th>
+                      <Th>有効期限</Th>
+                      <Th>操作</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>0</Td>
+                      <Td>Hol</Td>
+                      <Td>
+                        <Badge bg="success">有効</Badge>
+                      </Td>
+                      <Td>
+                        <Badge bg="warning">表示しない</Badge>
+                      </Td>
+                      <Td>設定なし</Td>
+                      <Td>
+                        <Button href="/special_items/123" variant="success" className="text-capitalize">
+                          詳細
+                        </Button>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              ) : (
+                <h6 className="p-10" style={{ color: '#888' }}>
+                  対象のデータがありません
+                </h6>
+              )}
             </Card.Body>
           </Card>
         </Col>

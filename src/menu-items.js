@@ -35,16 +35,39 @@ const menuItems = {
               url: '/department'
             },
             {
+              id: 'department',
+              title: '部署',
+              type: '',
+              url: '/special_item/edit/:id'
+            },
+            {
               id: 'adddepartment',
               title: '部署追加',
               type: '',
               url: '/department/create'
             },
             {
+              id: 'editdepartment',
+              title: '部署追加',
+              type: '',
+              url: '/department/edit/:id'
+            },
+            {
+              id: 'showdepartment',
+              title: '部署追加',
+              type: '',
+              url: '/department/:id'
+            },
+            {
               id: 'employee',
               title: '従業員',
               type: 'item',
               url: '/employee'
+            },            {
+              id: 'remaining_day',
+              title: '残り有休日数 設定',
+              type: '',
+              url: '/remaining_days/form'
             },
             {
               id: 'addemployee',
@@ -69,7 +92,7 @@ const menuItems = {
               id: 'treat-single',
               title: '個別付与・消化',
               type: 'item',
-              url: '/basic/treat-single'
+              url: '/treat_single'
             },
             {
               id: 'treat-multiple',
@@ -81,7 +104,7 @@ const menuItems = {
               id: 'management-book',
               title: '年次有給休暇管理簿',
               type: 'item',
-              url: '/basic/management-book'
+              url: '/management_book'
             },
             {
               id: 'overall-history',
@@ -93,19 +116,25 @@ const menuItems = {
               id: 'obligation',
               title: '有休消化義務チェック',
               type: 'item',
-              url: '/basic/obligation'
+              url: '/obligation'
             },
             {
               id: 'used-day-book',
               title: '休暇取得記録表',
               type: 'item',
-              url: '/basic/used-day-book'
+              url: '/used_day_book'
             },
             {
               id: 'used-day-requests',
               title: '休暇申請の承認',
               type: 'item',
-              url: '/approve'
+              url: '/used_day_requests'
+            },
+            {
+              id: 'used-day-requests',
+              title: '休暇申請の承認',
+              type: '',
+              url: '/used_day_requests/show/:id'
             }
           ]
         },
@@ -127,10 +156,28 @@ const menuItems = {
               url: '/settings'
             },
             {
+              id: 'ruleedit',
+              title: '設定変更',
+              type: '',
+              url: '/settings/rule_edit'
+            },
+            {
+              id: 'annualedit',
+              title: '有休付与設定',
+              type: '',
+              url: '/settings/annual_edit'
+            },
+            {
               id: 'special-items',
               title: '特休設定',
               type: 'item',
               url: '/special_items'
+            },
+            {
+              id: 'createspecial',
+              title: '特休作成',
+              type: '',
+              url: '/special_items/create'
             }
           ]
         }

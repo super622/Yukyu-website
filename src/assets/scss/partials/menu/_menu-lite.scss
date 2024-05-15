@@ -63,7 +63,7 @@
   min-height: $header-height;
   padding: 0;
   top: 0;
-  background-color:  rgba(256, 256, 256, 0.7);
+  background-color:  rgba(244, 247, 250, 0.7);
   backdrop-filter: blur(7px);
   color: $header-light-text-color;
   width: calc(100% - #{$Menu-width});
@@ -1191,6 +1191,11 @@
       color: $header-dark-background;
     }
 
+    .dropdown-menu a,
+    .drp-user a {
+      font-size: 20px;
+    }
+
     .m-header {
       display: flex;
       justify-content: space-between;
@@ -1257,7 +1262,7 @@
     ~ .pcoded-header {
       position: fixed;
       width: 100%;
-      background-color:  rgba(256, 256, 256, 0.7);
+      background-color:  rgba(244, 247, 250, 0.7);
       backdrop-filter: blur(7px);
     }
 

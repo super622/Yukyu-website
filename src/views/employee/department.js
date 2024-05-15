@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 const Department = () => {
@@ -34,25 +34,10 @@ const Department = () => {
                     <Td>0</Td>
                     <Td>
                       <div>
-                        <Button variant={'success'} className="text-capitalize" size="sm">
+                        <Button href="/department/123" variant={'success'} className="text-capitalize" size="sm">
                           表示
                         </Button>
-                        <Button variant={'warning'} className="text-capitalize" size="sm">
-                          編集
-                        </Button>
-                      </div>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td>部署名321</Td>
-                    <Td>1</Td>
-                    <Td>0</Td>
-                    <Td>
-                      <div>
-                        <Button variant={'success'} className="text-capitalize" size="sm">
-                          表示
-                        </Button>
-                        <Button variant={'warning'} className="text-capitalize" size="sm">
+                        <Button href="/department/edit/123" variant={'warning'} className="text-capitalize" size="sm">
                           編集
                         </Button>
                       </div>

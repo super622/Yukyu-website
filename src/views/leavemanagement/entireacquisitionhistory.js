@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Col, Row, Collapse, Card, Form } from 'react-bootstrap';
-import 'rsuite/DatePicker/styles/index.css';
 
 const EntireAcquisitionHistory = () => {
   const [open, setOpen] = useState(false);

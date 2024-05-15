@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
 
@@ -23,29 +23,31 @@ const SignUp1 = () => {
                   <div className="mb-4">
                     <i className="feather icon-user-plus auth-icon" />
                   </div>
-                  <h3 className="mb-4">Sign up</h3>
+                  <h3 className="mb-4">アカウント作成</h3>
                   <div className="input-group mb-3">
-                    <input type="text" className="form-control" placeholder="Username" />
+                    <input type="text" className="form-control" placeholder="メールアドレス" />
+                  </div>
+                  <div className="input-group">
+                    <input type="email" className="form-control" placeholder="パスワード" />
                   </div>
                   <div className="input-group mb-3">
-                    <input type="email" className="form-control" placeholder="Email address" />
+                    <em>6文字以上で設定してください</em>
                   </div>
                   <div className="input-group mb-4">
-                    <input type="password" className="form-control" placeholder="Password" />
+                    <input type="password" className="form-control" placeholder="パスワード（確認）" />
                   </div>
-                  <div className="form-check  text-start mb-4 mt-2">
-                    <input type="checkbox" className="form-check-input" id="customCheck1" defaultChecked={false} />
-                    <label className="form-check-label" htmlFor="customCheck1">
-                      Send me the <Link to="#"> Newsletter</Link> weekly.
-                    </label>
+                  <Button href="#" variant={'primary'}>アカウント作成</Button>
+                  <div className="text-center mt-3">
+                    <p className="mb-2 text-c-blue">
+                      <Link to={'/auth/signin-1'}>ログイン</Link>
+                    </p>
+                    <p className="mb-2 text-c-blue">
+                      <Link to={'#'}>認証メールが届いていませんか？</Link>
+                    </p>
+                    <p className="mb-2 text-c-blue">
+                      <Link to={'#'}>アカウントが凍結中ですか？</Link>
+                    </p>
                   </div>
-                  <button className="btn btn-primary mb-4">Sign up</button>
-                  <p className="mb-2">
-                    Already have an account?{' '}
-                    <NavLink to="/auth/signin-1" className="f-w-400">
-                      Login
-                    </NavLink>
-                  </p>
                 </Card.Body>
               </Col>
             </Row>

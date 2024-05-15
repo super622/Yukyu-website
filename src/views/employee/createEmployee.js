@@ -31,9 +31,9 @@ const CreateEmployee = () => {
                   <DatePicker oneTap style={{ maxWidth: '200px' }} locale={jaJp} defaultValue={new Date()} />
                 </div>
               </Form.Group>
-              <Form.Group className="mb-3 form-item row" controlId="exampleForm.ControlInput1">
+              <Form.Group className="mb-3 row" controlId="exampleForm.ControlInput1">
                 <div className="col-md-9 offset-md-3">
-                  <Form.Check type={'checkbox'} id={'checkbox'} name="group1" className="m-r-10" label={'在職中の全従業員'} />
+                  <Form.Check type={'checkbox'} id={'checkbox'} name="group1" className="m-r-10" label={'休職中'} />
                   <div className="hint">休職中に設定することでシステムによる有休の自動付与を停止することができます。</div>
                 </div>
               </Form.Group>

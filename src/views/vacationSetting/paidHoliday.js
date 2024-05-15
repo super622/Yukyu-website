@@ -1,6 +1,5 @@
 import React from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 const Department = () => {
   return (
@@ -21,21 +20,21 @@ const Department = () => {
               <hr />
               <Row>
                 <Col sm={3}>
-                  <p>最小取得単位</p>
+                  <h5>最小取得単位</h5>
                 </Col>
                 <Col sm={9}>1時間</Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={3}>
-                  <p>所定労働時間</p>
+                  <h5>所定労働時間</h5>
                 </Col>
                 <Col sm={9}>8時間</Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={3}>
-                  <p>有効期限の初期設定</p>
+                  <h5>有効期限の初期設定</h5>
                 </Col>
                 <Col sm={9}>
                   <p>2年 0ヶ月</p>
@@ -45,7 +44,7 @@ const Department = () => {
               <hr />
               <Row>
                 <div className="text-center">
-                  <Button variant={'outline-primary'} className="text-capitalize">
+                  <Button href="/settings/rule_edit" variant={'outline-primary'} className="text-capitalize">
                     変更
                   </Button>
                 </div>
@@ -94,7 +93,7 @@ const Department = () => {
               <hr />
               <Row>
                 <div className="text-center">
-                  <Button variant={'outline-primary'} className="text-capitalize">
+                  <Button href="/settings/annual_edit" variant={'outline-primary'} className="text-capitalize">
                     変更
                   </Button>
                 </div>
