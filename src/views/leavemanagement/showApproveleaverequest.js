@@ -53,7 +53,7 @@ const ShowApproveLeaveRequest = () => {
                       </tr>
                       <tr>
                         <td>取得希望日</td>
-                        <td>	2024/04/02 (火)から、2024/04/19 (金)まで</td>
+                        <td>2024/04/02 (火)から、2024/04/19 (金)まで</td>
                       </tr>
                       <tr>
                         <td>休暇種類</td>
@@ -67,9 +67,9 @@ const ShowApproveLeaveRequest = () => {
                       <tr>
                         <td>ステータス</td>
                         <td>
-                        <Badge bg={'success'} className="text-capitalize">
-                          承認済み
-                        </Badge>
+                          <Badge bg={'success'} className="text-capitalize">
+                            承認済み
+                          </Badge>
                         </td>
                       </tr>
                       <tr>

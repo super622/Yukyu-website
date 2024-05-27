@@ -156,7 +156,7 @@ const NavBar = () => {
           <Dropdown.Menu align="end" className="profile-notification">
             <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
               <ListGroup.Item as="li" bsPrefix=" ">
-                <Link to="#" className="dropdown-item">
+                <Link to="/mypage" className="dropdown-item">
                   <i className="feather icon-user" /> マイページ
                 </Link>
               </ListGroup.Item>

@@ -36,7 +36,9 @@ const SignUp1 = () => {
                   <div className="input-group mb-4">
                     <input type="password" className="form-control" placeholder="パスワード（確認）" />
                   </div>
-                  <Button href="#" variant={'primary'}>アカウント作成</Button>
+                  <Button href="#" variant={'primary'}>
+                    アカウント作成
+                  </Button>
                   <div className="text-center mt-3">
                     <p className="mb-2 text-c-blue">
                       <Link to={'/auth/signin-1'}>ログイン</Link>

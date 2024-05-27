@@ -57,6 +57,26 @@ const routes = [
     routes: [
       {
         exact: 'true',
+        path: '/mypage',
+        element: lazy(() => import('./views/mypage'))
+      },
+      {
+        exact: 'true',
+        path: '/mypage/edit_email',
+        element: lazy(() => import('./views/mypage/editemail'))
+      },
+      {
+        exact: 'true',
+        path: '/mypage/edit_password',
+        element: lazy(() => import('./views/mypage/edit_password'))
+      },
+      {
+        exact: 'true',
+        path: '/mypage/setting_notification_category',
+        element: lazy(() => import('./views/mypage/settingnotificate'))
+      },
+      {
+        exact: 'true',
         path: '/dashboard',
         element: lazy(() => import('./views/dashboard'))
       },

@@ -27,7 +27,9 @@ const ResetPassword1 = () => {
                   <div className="input-group mb-4">
                     <input type="email" className="form-control" placeholder="メールアドレス" />
                   </div>
-                  <Button href="#" variant={'primary'} className="mb-4">パスワード再発行</Button>
+                  <Button href="#" variant={'primary'} className="mb-4">
+                    パスワード再発行
+                  </Button>
                   <div className="text-center">
                     <p className="mb-2 text-c-blue">
                       <Link to={'/auth/signin-1'}>ログイン</Link>

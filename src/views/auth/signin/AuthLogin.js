@@ -5,18 +5,22 @@ import { Row, Col, Button, Alert, Form } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
+const loginAction = (email, password) => {
+  console.log(email, password);
+};
+
 const FirebaseLogin = ({ className, ...rest }) => {
   return (
     <React.Fragment>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          email: Yup.string().email('有効なメールアドレスが必要です。').max(255).required('メールアドレスは必須です。'),
+          password: Yup.string().max(255).required('パスワードは必須です。')
         })}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -29,6 +33,7 @@ const FirebaseLogin = ({ className, ...rest }) => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="email"
+                placeholder="メールアドレス"
                 value={values.email}
               />
               {touched.email && errors.email && <small className="text-danger form-text">{errors.email}</small>}
@@ -41,6 +46,7 @@ const FirebaseLogin = ({ className, ...rest }) => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="password"
+                placeholder="パスワード"
                 value={values.password}
               />
               {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}
@@ -58,7 +64,17 @@ const FirebaseLogin = ({ className, ...rest }) => {
 
             <Row>
               <Col mt={2} className="text-center">
-                <Button href="/dashboard" className="btn-block mb-4" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
+                <Button
+                  className="btn-block mb-4"
+                  color="primary"
+                  disabled={isSubmitting}
+                  size="large"
+                  type="submit"
+                  variant="primary"
+                  onClick={() => {
+                    loginAction(values.email, values.password);
+                  }}
+                >
                   ログイン
                 </Button>
               </Col>

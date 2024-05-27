@@ -168,7 +168,7 @@ const AllocateDigestAll = () => {
                   <Form.Group className="mb-3 form-item row" controlId="exampleForm.ControlInput1">
                     <Form.Label className="col-sm-3 required">付与日</Form.Label>
                     <div className="col-sm-9">
-                      <DatePicker oneTap style={{ width: '100%' }} locale={jaJp} />
+                      <DatePicker oneTap style={{ width: '100%' }} locale={jaJp} format="yyyy年MM月dd日" />
                     </div>
                   </Form.Group>
                   <hr />

@@ -20,7 +20,10 @@ const AnnualPaidManagementBook = () => {
             </Col>
             <Col className="gap-2 mt-2 ps-1 col-6">
               <Button href="#" variant={'outline-primary'} className="text-truncate m-0 w-100">
-                <i className="feather icon-chevron-right position-relative" style={{ top: '4px', float: 'right', marginLeft: '12px', marginRight: '0px' }}></i>
+                <i
+                  className="feather icon-chevron-right position-relative"
+                  style={{ top: '4px', float: 'right', marginLeft: '12px', marginRight: '0px' }}
+                ></i>
                 辻本 尚子
               </Button>
             </Col>

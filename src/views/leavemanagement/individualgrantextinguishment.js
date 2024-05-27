@@ -1,90 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import ApexCharts from 'apexcharts';
+import React, { useState } from 'react';
 import { Row, Col, Card, Button, Form, Badge, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import CanvasJSReact from '@canvasjs/react-charts';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const flag = true;
 
 const IndividualGrantExtinguishment = () => {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    var options = {
-      chart: {
-        type: 'area'
+  const options = {
+    theme: 'light2',
+    axisY: {
+      suffix: '日'
+    },
+    toolTip: {
+      shared: true
+    },
+    data: [
+      {
+        type: 'area',
+        name: 'GBP',
+        showInLegend: true,
+        xValueFormatString: 'YYYY',
+        yValueFormatString: '₹#,##0.##',
+        dataPoints: [
+          { x: new Date('2017- 01- 01'), y: 84.927 },
+          { x: new Date('2017- 02- 01'), y: 82.609 },
+          { x: new Date('2017- 03- 01'), y: 81.428 },
+          { x: new Date('2017- 04- 01'), y: 83.259 },
+          { x: new Date('2017- 05- 01'), y: 83.153 },
+          { x: new Date('2017- 06- 01'), y: 84.18 },
+          { x: new Date('2017- 07- 01'), y: 84.84 },
+          { x: new Date('2017- 08- 01'), y: 82.671 },
+          { x: new Date('2017- 09- 01'), y: 87.496 },
+          { x: new Date('2017- 10- 01'), y: 86.007 },
+          { x: new Date('2017- 11- 01'), y: 87.233 },
+          { x: new Date('2017- 12- 01'), y: 86.276 }
+        ]
       },
-      stroke: {
-        curve: 'stepline',
-      },
-      series: [
-        {
-          name: 'sales',
-          data: [{
-            x: 2023,
-            y: 7,
-          },
-          {
-            x: 2024,
-            y: 7,
-          },
-          {
-            x: 2024,
-            y: 6,
-          },
-          {
-            x: 2024,
-            y: 5,
-          },
-          {
-            x: 2024,
-            y: 6,
-          },
-          {
-            x: 2024,
-            y: 6,
-          }]
-        },
-        {
-            name: 'sales',
-            data: [{
-              x: 2023,
-              y: 0,
-            },
-            {
-              x: 2023,
-              y: 0,
-            },
-            {
-              x: 2023,
-              y: 0,
-            },
-            {
-              x: 2024,
-              y: 7,
-            },
-            {
-              x: 2024,
-              y: 7,
-            },
-            {
-              x: 2024,
-              y: 6,
-            }]
-          }
-      ],
-      xaxis: {
-        type: 'year',
-        categories: [2023, 2024]
-      },
-      yaxis: {
-        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+      {
+        type: 'area',
+        name: 'USD',
+        showInLegend: true,
+        xValueFormatString: 'YYYY',
+        yValueFormatString: '₹#,##0.##',
+        dataPoints: [
+          { x: new Date('2017- 01- 01'), y: 67.515 },
+          { x: new Date('2017- 02- 01'), y: 66.725 },
+          { x: new Date('2017- 03- 01'), y: 64.86 },
+          { x: new Date('2017- 04- 01'), y: 64.29 },
+          { x: new Date('2017- 05- 01'), y: 64.51 },
+          { x: new Date('2017- 06- 01'), y: 64.62 },
+          { x: new Date('2017- 07- 01'), y: 64.2 },
+          { x: new Date('2017- 08- 01'), y: 63.935 },
+          { x: new Date('2017- 09- 01'), y: 65.31 },
+          { x: new Date('2017- 10- 01'), y: 64.75 },
+          { x: new Date('2017- 11- 01'), y: 64.49 },
+          { x: new Date('2017- 12- 01'), y: 63.84 }
+        ]
       }
-    };
-    var chart = new ApexCharts(document.querySelector('#chart'), options);
-    chart.render();
-  }, []);
+    ]
+  };
 
   return (
     <React.Fragment>
@@ -99,7 +78,10 @@ const IndividualGrantExtinguishment = () => {
             </Col>
             <Col className="gap-2 mt-2 ps-1 col-6">
               <Button href="#" variant={'outline-primary'} className="text-truncate m-0 w-100">
-                <i className="feather icon-chevron-right position-relative" style={{ top: '4px', float: 'right', marginLeft: '12px', marginRight: '0px' }}></i>
+                <i
+                  className="feather icon-chevron-right position-relative"
+                  style={{ top: '4px', float: 'right', marginLeft: '12px', marginRight: '0px' }}
+                ></i>
                 辻本 尚子
               </Button>
             </Col>
@@ -313,7 +295,7 @@ const IndividualGrantExtinguishment = () => {
             </Card.Header>
             <Card.Body>
               {flag ? (
-                <div id="chart"></div>
+                <CanvasJSChart options={options} />
               ) : (
                 <h6 className="p-10" style={{ color: '#888' }}>
                   対象のデータがありません

@@ -411,7 +411,8 @@
 
 .fc .fc-col-header-cell-cushion {
     display: inline-block;
-    padding: 2px 4px
+    padding: 2px 4px;
+    color: $theme-font-color;
 }
 
 .fc .fc-bg-event,.fc .fc-non-business,.fc .fc-highlight {
@@ -1369,18 +1370,30 @@ a.fc-event,a.fc-event:hover {
     color: inherit
 }
 
+.fc-col-header-cell {
+    color: $theme-font-color;
+}
+
 .fc-day-sun {
-    color: red;
-    background-color: #fff0f0
+    background-color: #fff0f0;
+
+    .fc-daygrid-day-number,
+    .fc-col-header-cell-cushion {
+        color: red !important;
+    }
 }
 
 .fc-day-sat {
-    color: blue;
-    background-color: #f0f0ff
+    background-color: #f0f0ff;
+    
+    .fc-daygrid-day-number,
+    .fc-col-header-cell-cushion {
+        color: blue !important;
+    }
 }
 
 .fc-holiday {
-    color: red;
+    color: red !important;
     background-color: #fff0f0
 }
 
@@ -1427,13 +1440,9 @@ a.fc-event,a.fc-event:hover {
     color: inherit
 }
 
-.fc .fc-daygrid-day-number:hover {
-    background-color: transparent;
-    color: inherit
-}
-
 .fc .fc-daygrid-day-number {
-    height: 16px
+    height: 1.5em;
+    color: $theme-font-color;
 }
 
 .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
@@ -1604,6 +1613,7 @@ a.fc-event,a.fc-event:hover {
     padding: 0
 }
 
-table .fc-col-header {
-    background-color: #eff0f2
+table .fc-col-header,
+th > .fc-scrollgrid-sync-inner {
+    background-color: #eff0f2 !important;
 }

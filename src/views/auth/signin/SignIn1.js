@@ -3,7 +3,7 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
-import AuthLogin from './FirebaseLogin';
+import AuthLogin from './AuthLogin';
 
 const Signin1 = () => {
   return (
