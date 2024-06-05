@@ -1202,3 +1202,9 @@ p.text-muted {
 .rs-input {
   padding: 10px 20px !important;
 }
+
+.checkboxes-container, .p0 {
+  label {
+    padding-top: 0 !important;
+  }
+}

@@ -1,15 +1,32 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Button, Alert, Form } from 'react-bootstrap';
-
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { yukAPI, goRedirect } from '../../../utils/api';
 
-const loginAction = (email, password) => {
-  console.log(email, password);
-};
+const AuthLogin = ({ setMsg, setMsgType }) => {
+  const [isSubmited, setIsSubmited] = useState(false);
 
-const FirebaseLogin = ({ className, ...rest }) => {
+  const loginAction = async (email, password, setMsg, setMsgType) => {
+    setIsSubmited(true);
+    await yukAPI('login', { email: email, password: password }, 'post', '', 2000)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setMsg(res.data.msg);
+          setMsgType('success');
+          goRedirect('/dashboard');
+        } else {
+          setMsg(res.data.msg);
+          setMsgType('danger');
+          setIsSubmited(false);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   return (
     <React.Fragment>
       <Formik
@@ -23,8 +40,9 @@ const FirebaseLogin = ({ className, ...rest }) => {
           password: Yup.string().max(255).required('パスワードは必須です。')
         })}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit} className={className} {...rest}>
+        {/* {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => ( */}
+        {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
+          <form noValidate onSubmit={handleSubmit}>
             <div className="form-group mb-3">
               <input
                 className="form-control"
@@ -67,12 +85,12 @@ const FirebaseLogin = ({ className, ...rest }) => {
                 <Button
                   className="btn-block mb-4"
                   color="primary"
-                  disabled={isSubmitting}
+                  disabled={isSubmited}
                   size="large"
                   type="submit"
                   variant="primary"
                   onClick={() => {
-                    loginAction(values.email, values.password);
+                    loginAction(values.email, values.password, setMsg, setMsgType);
                   }}
                 >
                   ログイン
@@ -86,8 +104,9 @@ const FirebaseLogin = ({ className, ...rest }) => {
   );
 };
 
-FirebaseLogin.propTypes = {
-  className: PropTypes.string
+AuthLogin.propTypes = {
+  setMsg: PropTypes.func,
+  setMsgType: PropTypes.func
 };
 
-export default FirebaseLogin;
+export default AuthLogin;

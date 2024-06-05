@@ -1,14 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Badge, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import { yukAPI, auth_token } from '../../utils/api';
 
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import CalendarContainer from './CalendarContainer';
 
-const flag = true;
-
 const DashDefault = () => {
+  const [employeeCnt, setEmployeeCnt] = useState(0);
+  const [departmentCnt, setDepartmentCnt] = useState(0);
+  const [overallRate, setOverallRate] = useState('-- %');
+  const [settings, setSettings] = useState({
+    acquisition_order: '',
+    minimum_acquisition_unit: '',
+    scheduled_working_hours: '',
+    date_of_expiry_year: '',
+    date_of_expiry_month: '',
+    automatic_grant: '',
+    grant_implementation_date: ''
+  });
+  const [department, setDepartment] = useState([]);
+  
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await yukAPI('dashboard', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setEmployeeCnt(res.data.data.employee_cnt);
+          setDepartmentCnt(res.data.data.department_cnt);
+          setSettings(res.data.data.settings);
+          setDepartment(res.data.data.department);
+          setOverallRate(res.data.data.overallrate);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   return (
     <React.Fragment>
       <Row>
@@ -20,7 +55,7 @@ const DashDefault = () => {
                   <i className="feather icon-users f-30 text-c-purple" />
                 </div>
                 <div className="col">
-                  <h3 className="f-w-300">2</h3>
+                  <h3 className="f-w-300">{`${employeeCnt}`}</h3>
                   <span className="d-block text-uppercase">従業員</span>
                 </div>
               </div>
@@ -42,7 +77,7 @@ const DashDefault = () => {
                   <i className="feather icon-home f-30 text-c-blue" />
                 </div>
                 <div className="col">
-                  <h3 className="f-w-300">0</h3>
+                  <h3 className="f-w-300">{`${departmentCnt}`}</h3>
                   <span className="d-block text-uppercase">部署数</span>
                 </div>
               </div>
@@ -64,7 +99,7 @@ const DashDefault = () => {
                   <i className="feather icon-layers f-30 text-c-green" />
                 </div>
                 <div className="col">
-                  <h3 className="f-w-300">6 %</h3>
+                  <h3 className="f-w-300">{`${overallRate}`}</h3>
                   <span className="d-block text-uppercase">全体有休取得率（平均）</span>
                 </div>
               </div>
@@ -97,7 +132,7 @@ const DashDefault = () => {
               <h5>部署別有休取得率（平均）</h5>
             </Card.Header>
             <Card.Body>
-              {flag ? (
+              {department.length > 0 ? (
                 <Table>
                   <Thead>
                     <Tr>
@@ -108,14 +143,16 @@ const DashDefault = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    <Tr>
-                      <Td>部署名</Td>
-                      <Td>0</Td>
-                      <Td>-- %</Td>
-                      <Td>
-                        <Link to="/employee">従業員を表示</Link>
-                      </Td>
-                    </Tr>
+                    {department.map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.name}</Td>
+                        <Td>{item.employee_cnt}</Td>
+                        <Td>{item.rate}</Td>
+                        <Td>
+                          <Link to={`/department/${item.id}`}>従業員を表示</Link>
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                 </Table>
               ) : (
@@ -137,19 +174,21 @@ const DashDefault = () => {
                   <h6>有休取得ルール</h6>
                   <Row className="m-b-2">
                     <Col className="col-4">取得順序</Col>
-                    <Col className="col-8">: 付与日の古い有休から消化</Col>
+                    <Col className="col-8">: {`${settings.acquisition_order}`}</Col>
                   </Row>
                   <Row className="m-b-2">
                     <Col className="col-4">最小取得単位</Col>
-                    <Col className="col-8">: 1時間</Col>
+                    <Col className="col-8">: {`${settings.minimum_acquisition_unit}`}</Col>
                   </Row>
                   <Row className="m-b-2">
                     <Col className="col-4">所定労働時間</Col>
-                    <Col className="col-8">: 8時間</Col>
+                    <Col className="col-8">: {`${settings.scheduled_working_hours}`}</Col>
                   </Row>
                   <Row className="m-b-2">
                     <Col className="col-4">有効期限</Col>
-                    <Col className="col-8">: 2年 0ヶ月</Col>
+                    <Col className="col-8">
+                      : {`${settings.date_of_expiry_year}`}年 {`${settings.date_of_expiry_month}`}ヶ月
+                    </Col>
                   </Row>
                 </Col>
                 <Col md={6} xxl={6} className=" m-b-30">
@@ -158,14 +197,20 @@ const DashDefault = () => {
                     <Col className="col-4">自動付与</Col>
                     <Col className="col-8">
                       :
-                      <Badge bg={'success'} className={'mx-2'}>
-                        有効
-                      </Badge>
+                      {settings.automatic_grant ? (
+                        <Badge bg={'success'} className={'mx-2'}>
+                          有効
+                        </Badge>
+                      ) : (
+                        <Badge bg={'danger'} className={'mx-2'}>
+                          無効
+                        </Badge>
+                      )}
                     </Col>
                   </Row>
                   <Row className="m-b-2">
                     <Col className="col-4">付与実施日</Col>
-                    <Col className="col-8">: 入社日から算出した日</Col>
+                    <Col className="col-8">: {`${settings.grant_implementation_date}`}</Col>
                   </Row>
                 </Col>
               </Row>

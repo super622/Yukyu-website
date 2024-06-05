@@ -1,81 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-// import { Calendar } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { yukAPI, auth_token } from '../../utils/api';
 import dateJson from '../../assets/date.json';
-
-const event = [
-  {
-    start: '2024-05-01',
-    end: '2024-05-08',
-    title: '藤村',
-    color: 'red'
-  },
-  {
-    start: '2024-05-07',
-    end: '2024-05-15',
-    title: '藤村',
-    color: 'green'
-  },
-  {
-    start: '2024-05-07',
-    end: '2024-05-15',
-    title: '藤村',
-    color: 'yellow'
-  },
-  {
-    start: '2024-05-07',
-    end: '2024-05-15',
-    title: '藤村'
-  }
-];
 
 const CalendarContainer = () => {
   const [show, setShow] = useState(false);
+  const [eventData, setEventData] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const calendarRef = useRef(null);
-  const calendarApi = calendarRef.current.getApi();
 
   useEffect(() => {
-    // const calendarEl = document.getElementById('calendar');
-    // const calendar = new Calendar(calendarEl, {
-    //   locale: 'ja-JP',
-    //   initialView: 'dayGridMonth',
-    //   plugins: [dayGridPlugin],
-    //   events: event,
-    //   headerToolbar: false,
-    //   handleWindowResize: true,
-    //   contentHeight: 'auto',
-    //   height: 'auto',
-    //   moreLinkContent: function (args) {
-    //     return '+' + args.num + '件';
-    //   },
-    //   eventClick: function (info) {
-    //     // v5から？勝手にリンク生成されていた
-    //     // window.open(info.event.url)
-    //     console.log(info);
-    //   },
-    //   expandRows: true,
-    //   views: {
-    //     dayGridMonth: {
-    //       dayMaxEventRows: 3
-    //     }
-    //   }
-    // });
-    // calendar.render();
-
+    let curYear = new Date().getFullYear();
+    getEventData(curYear, '');
     setTimeout(() => {
       displayHoliday();
     }, 100);
   }, []);
 
+  const getEventData = async (year, month, departments) => {
+    await yukAPI('get_event_data', { year: year, month: month, departments: departments }, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          console.log(res.data.data);
+          setEventData(res.data.data);
+          const calendarApi = calendarRef.current.getApi();
+          calendarApi.addEventSource(res.data.data);
+          calendarApi.refetchEvents();
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   const displayHoliday = () => {
+    $('.fc-holiday-text').remove();
     Object.entries(dateJson).forEach(([date, holidayName]) => {
       if (holidayName.includes('振替休日')) {
         holidayName = '振替休日';
@@ -87,16 +54,46 @@ const CalendarContainer = () => {
   };
 
   const goNextMonth = () => {
+    const calendarApi = calendarRef.current.getApi();
     calendarApi.next();
+    setFormMonth(1);
+    displayHoliday();
   };
 
   const goPrevMonth = () => {
+    const calendarApi = calendarRef.current.getApi();
     calendarApi.prev();
-  }
+    setFormMonth(-1);
+    displayHoliday();
+  };
+
+  const goAnyDate = () => {
+    var curDate = getStrDateForm();
+    const calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(curDate);
+    displayHoliday();
+  };
+
+  const getStrDateForm = () => {
+    var year = $('#year').val();
+    var month = $('#month').val();
+    if (month <= 9) {
+      month = `0${month}`;
+    }
+    return `${year}-${month}-01`;
+  };
+
+  const setFormMonth = (num) => {
+    var curDate = getStrDateForm();
+    var dateObj = new Date(curDate);
+    var prevMonth = new Date(dateObj.getFullYear(), dateObj.getMonth() + num, dateObj.getDate());
+    $('#month').val(prevMonth.getMonth() + 1);
+    $('#year').val(prevMonth.getFullYear());
+  };
 
   return (
     <React.Fragment>
-      <div style={{ maxWidth: '895px', margin: 'auto' }}>
+      <div style={{ margin: 'auto' }}>
         <div>
           <div className="d-flex calendar-form-wrap team-position">
             <div className="w-100">
@@ -113,7 +110,7 @@ const CalendarContainer = () => {
             <div className="d-flex m-r-10">
               <div className="d-flex" style={{ alignItems: 'flex-end' }}>
                 <div className="calendar-form-group">
-                  <select name="year" id="year" className="calendar-form-control year">
+                  <select name="year" id="year" className="calendar-form-control year" onChange={goAnyDate}>
                     <option value="2000">2000</option>
                     <option value="2001">2001</option>
                     <option value="2002">2002</option>
@@ -138,9 +135,7 @@ const CalendarContainer = () => {
                     <option value="2021">2021</option>
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
-                    <option selected="selected" value="2024">
-                      2024
-                    </option>
+                    <option value="2024">2024</option>
                     <option value="2025">2025</option>
                     <option value="2026">2026</option>
                     <option value="2027">2027</option>
@@ -152,14 +147,12 @@ const CalendarContainer = () => {
               </div>
               <div className="d-flex ms-2" style={{ alignItems: 'flex-end' }}>
                 <div className="calendar-form-group">
-                  <select name="month" id="month" className="calendar-form-control month">
+                  <select name="month" id="month" className="calendar-form-control month" onChange={goAnyDate}>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
-                    <option value="5" selected="selected">
-                      5
-                    </option>
+                    <option value="5">5</option>
                     <option value="6">6</option>
                     <option value="7">7</option>
                     <option value="8">8</option>
@@ -187,7 +180,7 @@ const CalendarContainer = () => {
           locale={'ja-JP'}
           initialView={'dayGridMonth'}
           plugins={[dayGridPlugin]}
-          events={event}
+          events={eventData}
           headerToolbar={false}
           handleWindowResize={true}
           contentHeight={'auto'}

@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Row, Card, Badge } from 'react-bootstrap';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import { yukAPI, auth_token } from '../../utils/api';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 const flag = true;
 const SpecialHolidaySetting = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await yukAPI('speicalholidaysettings_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setData(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   return (
     <React.Fragment>
       <Row>
@@ -40,22 +61,30 @@ const SpecialHolidaySetting = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    <Tr>
-                      <Td>0</Td>
-                      <Td>Hol</Td>
-                      <Td>
-                        <Badge bg="success">有効</Badge>
-                      </Td>
-                      <Td>
-                        <Badge bg="warning">表示しない</Badge>
-                      </Td>
-                      <Td>設定なし</Td>
-                      <Td>
-                        <Button href="/special_items/123" variant="success" className="text-capitalize">
-                          詳細
-                        </Button>
-                      </Td>
-                    </Tr>
+                    {data.map((item, idx) => (
+                      <Tr key={idx}>
+                        <Td>{idx + 1}</Td>
+                        <Td>{item.name}</Td>
+                        <Td>{item.status ? <Badge bg={'success'}>有効</Badge> : <Badge bg={'danger'}>無効</Badge>}</Td>
+                        <Td>
+                          {item.notice_excess_consumption ? (
+                            <Badge bg={'warning'}>表示しない</Badge>
+                          ) : (
+                            <Badge bg={'success'}>表示する</Badge>
+                          )}
+                        </Td>
+                        <Td>
+                          {item.expire_year === 0 && item.expire_month === 0 && item.expire_day === 0
+                            ? '設定なし'
+                            : `${item.expire_year}年${item.expire_month}ヶ月${item.expire_day}日`}
+                        </Td>
+                        <Td>
+                          <Button href={`/special_items/${item.id}`} variant="success" className="text-capitalize">
+                            詳細
+                          </Button>
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                 </Table>
               ) : (

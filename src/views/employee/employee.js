@@ -1,11 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { yukAPI, auth_token } from '../../utils/api';
+import moment from 'moment/moment';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import { Button, Col, Row, Alert, Collapse, Card, Form, Dropdown, DropdownButton, ButtonGroup, Badge } from 'react-bootstrap';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 const Employee = () => {
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [department, setDepartment] = useState(0);
+  const [departments, setDepartments] = useState([]);
+  const [empNumber, setEmpNumber] = useState('');
+  const [workingType, setWorkingType] = useState(0);
+  const [status, setStatus] = useState(0);
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    getDepartment();
+    getEmployee();
+  }, []);
+
+  const getDepartment = async () => {
+    await yukAPI('department_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setDepartments(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const getEmployee = async () => {
+    await yukAPI('employee_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          console.log(res.data.data);
+          setEmployees(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const searchEmployee = async () => {
+    await yukAPI('employee_list',
+      {
+        name: name,
+        department: department,
+        emp_number: empNumber,
+        working_type: workingType,
+        status: status
+      },
+      'post',
+      auth_token
+    )
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setEmployees(res.data.data);
+          setOpen(false);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const resetSearch = () => {
+    setName('');
+    setDepartment(0);
+    setEmpNumber('');
+    setWorkingType(0);
+    setStatus(0);
+    getEmployee();
+    setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -65,38 +143,38 @@ const Employee = () => {
                   <Col sm={12} md={4}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Label>氏名</Form.Label>
-                      <Form.Control type="input" placeholder="" />
+                      <Form.Control type="input" value={name} onChange={(e) => setName(e.target.value)} />
                     </Form.Group>
                   </Col>
                   <Col sm={12} md={3}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Label>所属部署</Form.Label>
-                      <Form.Select aria-label="Default select example">
-                        <option></option>
-                        <option value="1">部署名1</option>
-                        <option value="2">部署名2</option>
-                        <option value="3">部署名3</option>
+                      <Form.Select aria-label="Default select example" onChange={(e) => setDepartment(e.target.value)}>
+                        <option value={""}></option>
+                        {departments.map((department, idx) => (
+                          <option key={idx} value={department.id}>{department.name}</option>
+                        ))}
                       </Form.Select>
                     </Form.Group>
                   </Col>
                   <Col sm={12} md={2}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Label>社員番号</Form.Label>
-                      <Form.Control type="input" placeholder="" />
+                      <Form.Control type="input" value={empNumber} onChange={(e) => setEmpNumber(e.target.value)} />
                     </Form.Group>
                   </Col>
                   <Col sm={12} md={3}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Label>勤務形態</Form.Label>
-                      <Form.Select aria-label="Default select example">
-                        <option></option>
-                        <option value="fulltime">正社員</option>
-                        <option value="parttime_5">パート(週5日)</option>
-                        <option value="parttime_4">パート(週4日)</option>
-                        <option value="parttime_3">パート(週3日)</option>
-                        <option value="parttime_2">パート(週2日)</option>
-                        <option value="parttime_1">パート(週1日)</option>
-                        <option value="irregular">パート(不定期)</option>
+                      <Form.Select aria-label="Default select example" onChange={(e) => setWorkingType(e.target.value)}>
+                        <option value="0"></option>
+                        <option value="1">正社員</option>
+                        <option value="2">パート(週5日)</option>
+                        <option value="3">パート(週4日)</option>
+                        <option value="4">パート(週3日)</option>
+                        <option value="5">パート(週2日)</option>
+                        <option value="6">パート(週1日)</option>
+                        <option value="7">パート(不定期)</option>
                       </Form.Select>
                     </Form.Group>
                   </Col>
@@ -104,19 +182,19 @@ const Employee = () => {
                 <Row>
                   <Col sm={12}>
                     <div className="d-flex">
-                      <Form.Check type="checkbox" className="m-r-10" id="custom-check1" label="在職中" />
-                      <Form.Check type="checkbox" className="m-r-10" id="custom-check2" label="休職中" />
-                      <Form.Check type="checkbox" className="m-r-10" id="custom-check3" label="退職済み" />
+                      <Form.Check type="checkbox" className="m-r-10" label="在職中" onClick={(e) => setStatus(e.target.checked ? 0 : status)} />
+                      <Form.Check type="checkbox" className="m-r-10" label="休職中" onClick={(e) => setStatus(e.target.checked ? 1 : status)} />
+                      <Form.Check type="checkbox" className="m-r-10" label="退職済み" onClick={(e) => setStatus(e.target.checked ? 2 : status)} />
                     </div>
                   </Col>
                 </Row>
                 <Row>
                   <Col sm={12}>
-                    <Button variant={'primary'} size="sm" className="text-capitalize">
+                    <Button variant={'primary'} size="sm" className="text-capitalize" onClick={searchEmployee}>
                       <i className="feather icon-search" />
                       検索する
                     </Button>
-                    <Button variant={'dark'} size="sm" className="text-capitalize">
+                    <Button variant={'dark'} size="sm" className="text-capitalize" onClick={resetSearch}>
                       クリア
                     </Button>
                   </Col>
@@ -143,37 +221,47 @@ const Employee = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  <Tr>
-                    <Td>
-                      <Link href="#">
-                        辻本 尚子
-                        <i className="feather icon-info-circle ms-1"></i>
-                      </Link>
-                    </Td>
-                    <Td>demizu@kouyou-p.co.jp</Td>
-                    <Td>10日 / 0日</Td>
-                    <Td>2025/03/01</Td>
-                    <Td>12 %</Td>
-                    <Td>
-                      <span>2022/09/01</span>
-                      <br />
-                      <span>パート(週4日)</span>
-                      <br />
-                      <Badge bg={'primary'} className={'mx-2'}>
-                        在職中
-                      </Badge>
-                    </Td>
-                    <Td>
-                      <div>
-                        <Button href="/treat_single" variant={'success'} className="text-capitalize" size="sm">
-                          休暇管理
-                        </Button>
-                        <Button href="/remaining_days/form" variant={'primary'} className="text-capitalize" size="sm">
-                          残り有休日数を設定
-                        </Button>
-                      </div>
-                    </Td>
-                  </Tr>
+                  {employees.map((item, idx) => (
+                    <Tr key={idx}>
+                      <Td>
+                        <i>{item.employee_number}&nbsp;{item.department_name ? item.department_name : ''}</i>
+                        <br />
+                        <Link href="#">
+                          {item.name}
+                          <i className="feather icon-info ms-1"></i>
+                        </Link>
+                      </Td>
+                      <Td>{item.email}</Td>
+                      <Td>
+                        <span>1日と6時間 / 0日と2時間</span>
+                        <br />
+                        <Badge bg={'danger'}>
+                          特休消化の異常
+                        </Badge>
+                      </Td>
+                      <Td>2022/09/01</Td>
+                      <Td>12 %</Td>
+                      <Td>
+                        <span>{moment(item.hire_date).format('YYYY/MM/DD')}</span>
+                        <br />
+                        <span>{item.working_type_label}</span>
+                        <br />
+                        <Badge bg={'primary'}>
+                          {item.status_label}
+                        </Badge>
+                      </Td>
+                      <Td>
+                        <div>
+                          <Button href="/treat_single" variant={'success'} className="text-capitalize" size="sm">
+                            休暇管理
+                          </Button>
+                          <Button href="/remaining_days/form" variant={'primary'} className="text-capitalize" size="sm">
+                            残り有休日数を設定
+                          </Button>
+                        </div>
+                      </Td>
+                    </Tr>
+                  ))}
                 </Tbody>
               </Table>
             </Card.Body>

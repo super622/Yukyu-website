@@ -1,15 +1,21 @@
-import React from 'react';
-import { Card } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
 import AuthLogin from './AuthLogin';
 
 const Signin1 = () => {
+  const [msg, setMsg] = useState('');
+  const [msgType, setMsgType] = useState('success');
+
   return (
     <React.Fragment>
       <Breadcrumb />
       <div className="auth-wrapper">
+        <Alert variant={msgType} show={msg} onClose={() => setMsg('')} dismissible>
+          <span>{`${msg}`}</span>
+        </Alert>
         <div className="auth-content">
           <div className="auth-bg">
             <span className="r" />
@@ -23,7 +29,7 @@ const Signin1 = () => {
                 <i className="feather icon-unlock auth-icon" />
               </div>
               <h5 className="text-center">ログイン</h5>
-              <AuthLogin />
+              <AuthLogin setMsg={setMsg} setMsgType={setMsgType} />
               <div className=" text-center">
                 <p className="mb-2 text-c-blue">
                   <Link to={'/auth/signup-1'}>アカウント作成</Link>

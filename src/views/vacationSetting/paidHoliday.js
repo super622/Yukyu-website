@@ -1,7 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
+import { yukAPI, auth_token } from '../../utils/api';
 
 const Department = () => {
+  const [data, setData] = useState({
+    acquisition_order_label: '',
+    minimum_acquisition_unit_label: '',
+    scheduled_working_hours_label: '',
+    date_of_expiry_year: '',
+    date_of_expiry_month: '',
+    automatic_grant: '',
+    grant_implementation_date: 0,
+    grant_implementation_date_label: '',
+    base_date_month: '',
+    base_date_day: ''
+  });
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await yukAPI('show_paidholidaysettings', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setData(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   return (
     <React.Fragment>
       <Row>
@@ -15,21 +47,21 @@ const Department = () => {
                 <Col sm={3}>
                   <h5>取得順序</h5>
                 </Col>
-                <Col sm={9}>付与日の古い有休から消化</Col>
+                <Col sm={9}>{data.acquisition_order_label}</Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={3}>
                   <h5>最小取得単位</h5>
                 </Col>
-                <Col sm={9}>1時間</Col>
+                <Col sm={9}>{data.minimum_acquisition_unit_label}</Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={3}>
                   <h5>所定労働時間</h5>
                 </Col>
-                <Col sm={9}>8時間</Col>
+                <Col sm={9}>{data.scheduled_working_hours_label}</Col>
               </Row>
               <hr />
               <Row>
@@ -37,7 +69,9 @@ const Department = () => {
                   <h5>有効期限の初期設定</h5>
                 </Col>
                 <Col sm={9}>
-                  <p>2年 0ヶ月</p>
+                  <p>
+                    {data.date_of_expiry_year}年 {data.date_of_expiry_month}ヶ月
+                  </p>
                   <p>有休の付与日から消滅するまでの期間になります。 有休を手動で付与する場合は、付与時にこの値を上書きできます。</p>
                 </Col>
               </Row>
@@ -65,9 +99,7 @@ const Department = () => {
                   <h5>自動付与</h5>
                 </Col>
                 <Col sm={9}>
-                  <h5>
-                    <Badge bg={'success'}>有効</Badge>
-                  </h5>
+                  <h5>{data.automatic_grant ? <Badge bg={'success'}>有効</Badge> : <Badge bg={'danger'}>無効</Badge>}</h5>
                   <p>
                     自動付与を有効にしている場合、
                     有休付与予定日を迎えた従業員（勤務形態が「パート（不定期）」を除く）に対しシステムが自動で有休を付与します。
@@ -85,9 +117,16 @@ const Department = () => {
                 </Col>
                 <Col sm={9}>
                   <h5>
-                    <span className="feather icon-calendar">入社日から算出した日</span>
+                    <span className="feather icon-calendar">{data.grant_implementation_date_label}</span>
                   </h5>
                   <p>従業員の入社日から算出して付与するので公平感のある付与方式です。</p>
+                  {data.grant_implementation_date ? (
+                    <p>
+                      基準日:{data.base_date_month}月{data.base_date_day}日
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </Col>
               </Row>
               <hr />

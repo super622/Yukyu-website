@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
+import { yukAPI, auth_token } from '../../utils/api';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 const Department = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await yukAPI('department_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setData(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
   return (
     <React.Fragment>
       <Row>
@@ -18,33 +39,39 @@ const Department = () => {
         <Col sm={12} md={12}>
           <Card>
             <Card.Body>
-              <Table>
-                <Thead>
-                  <Tr>
-                    <Th>名前</Th>
-                    <Th>優先度</Th>
-                    <Th>部署人数</Th>
-                    <Th>操作</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td>部署名321</Td>
-                    <Td>1</Td>
-                    <Td>0</Td>
-                    <Td>
-                      <div>
-                        <Button href="/department/123" variant={'success'} className="text-capitalize" size="sm">
-                          表示
-                        </Button>
-                        <Button href="/department/edit/123" variant={'warning'} className="text-capitalize" size="sm">
-                          編集
-                        </Button>
-                      </div>
-                    </Td>
-                  </Tr>
-                </Tbody>
-              </Table>
+              {data.length > 0 ? (
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th>名前</Th>
+                      <Th>優先度</Th>
+                      <Th>部署人数</Th>
+                      <Th>操作</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {data.map((item) => (
+                      <Tr key={item.id}>
+                        <Td>{item.name}</Td>
+                        <Td>{item.priority}</Td>
+                        <Td>{item.number}</Td>
+                        <Td>
+                          <div>
+                            <Button href={`/department/${item.id}`} variant={'success'} className="text-capitalize" size="sm">
+                              表示
+                            </Button>
+                            <Button href={`/department/edit/${item.id}`} variant={'warning'} className="text-capitalize" size="sm">
+                              編集
+                            </Button>
+                          </div>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              ) : (
+                <div className="m-b-20">対象のデータがありません</div>
+              )}
             </Card.Body>
           </Card>
         </Col>
