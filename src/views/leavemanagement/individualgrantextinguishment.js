@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Badge, Collapse } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { yukAPI, auth_token } from '../../utils/api';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import CanvasJSReact from '@canvasjs/react-charts';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const flag = true;
-
 const IndividualGrantExtinguishment = () => {
+  let params = useParams();
   const [open, setOpen] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [showLeftEmp, setShowLeftEmp] = useState(false);
+  const [department, setDepartment] = useState('');
+  const [search, setSearch] = useState('');
+  const [empList, setEmpList] = useState([]);
+  // const [curData, setCurData] = useState([]);
+  // const [prevEmp, setPrevEmp] = useState({
+  //   id: '',
+  //   name: ''
+  // });
+  // const [nextEmp, setNextEmp] = useState({
+  //   id: '',
+  //   name: ''
+  // });
+
   const options = {
     theme: 'light2',
     axisY: {
@@ -64,6 +80,68 @@ const IndividualGrantExtinguishment = () => {
       }
     ]
   };
+  const flag = true;
+
+  useEffect(() => {
+    getEmployeeInfo();
+    getEmpData();
+    getDepData();
+    console.log(showLeftEmp, department, empList);
+    console.log(typeof params.id);
+    handleSearch();
+  }, []);
+
+  const getEmployeeInfo = async () => {
+    await yukAPI('show_employee', { id: params.id}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setEmployees(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const getEmpData = async () => {
+    await yukAPI('employee_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setEmployees(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const getDepData = async () => {
+    await yukAPI('department_list', {}, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          setDepartments(res.data.data);
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const handleSearch = async () => {
+    let data = [];
+    for (let i = 0; i < employees.length; i++) {
+      if (employees[i].name.includes(search)) {
+        continue;
+      }
+    }
+    setEmpList(data);
+  };
 
   return (
     <React.Fragment>
@@ -88,34 +166,51 @@ const IndividualGrantExtinguishment = () => {
           </Row>
           <Card>
             <Card.Body>
-              <Form.Select>
-                <option>部署名</option>
-                <option>部署名</option>
-                <option>部署名</option>
+              <Form.Select onChange={(e) => setDepartment(e.target.value)}>
+                <option value="">全ての部署</option>
+                {departments.map((item, idx) => (
+                  <option value={item.id} key={idx}>
+                    {item.name}
+                  </option>
+                ))}
               </Form.Select>
               <Row className="mt-2">
                 <Col sm={12} className="d-flex justify-content-end">
-                  <Form.Check type={'checkbox'} id={'checkbox'} name="group1" className="m-r-10" label={'退職者を表示する'} />
+                  <Form.Check
+                    type={'checkbox'}
+                    id={'checkbox'}
+                    ame="group1"
+                    className="m-r-10"
+                    label={'退職者を表示する'}
+                    onClick={(e) => setShowLeftEmp(e.target.checked)}
+                  />
                 </Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={12}>
-                  <Form.Control type="input" placeholder="氏名 / 社員番号" />
+                  <Form.Control type="input" placeholder="氏名 / 社員番号" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </Col>
               </Row>
               <div className="mt-2">
                 <div className="user-list">
-                  <Link to="#">
-                    <div className="user-list-row select-user-row active">
-                      <div className="person-name">辻本 尚子</div>
-                    </div>
-                  </Link>
-                  <Link to="#">
-                    <div className="user-list-row select-user-row">
-                      <div className="person-name">出水 亜須加</div>
-                    </div>
-                  </Link>
+                  {employees.map((item, idx) => (
+                    <Link key={idx} to={`/treat_single/${item.id}`}>
+                      <div
+                        className={
+                          params.id
+                            ? parseInt(params.id) === item.id
+                              ? 'user-list-row select-user-row active'
+                              : 'user-list-row select-user-row'
+                            : idx === 0
+                            ? 'user-list-row select-user-row active'
+                            : 'user-list-row select-user-row'
+                        }
+                      >
+                        <div className="person-name">{item.name}</div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </Card.Body>
@@ -167,10 +262,10 @@ const IndividualGrantExtinguishment = () => {
                   </div>
                   <div>
                     <span>
-                      <Link to={'#'}>
+                      <a href="#remainCard">
                         <i className="feather icon-bar-chart"></i>
                         &nbsp;有休残日数グラフ
-                      </Link>
+                      </a>
                     </span>
                   </div>
                 </Col>
@@ -289,7 +384,7 @@ const IndividualGrantExtinguishment = () => {
       </Row>
       <Row>
         <Col sm={12}>
-          <Card>
+          <Card id="remainCard">
             <Card.Header>
               <h5>有休残日数グラフ</h5>
             </Card.Header>

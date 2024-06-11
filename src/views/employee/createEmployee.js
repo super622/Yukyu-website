@@ -165,6 +165,7 @@ const CreateEmployee = () => {
                     style={{ maxWidth: '250px' }}
                     onChange={(e) => setWorkingHours(e.target.value)}
                   >
+                    <option value="8">8時間</option>
                     <option value="7">7時間</option>
                     <option value="6">6時間</option>
                     <option value="5">5時間</option>

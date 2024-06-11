@@ -172,6 +172,11 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/treat_single/:id',
+        element: lazy(() => import('./views/leavemanagement/individualgrantextinguishment'))
+      },
+      {
+        exact: 'true',
         path: '/treat_single',
         element: lazy(() => import('./views/leavemanagement/individualgrantextinguishment'))
       },

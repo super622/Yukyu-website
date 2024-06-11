@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { yukAPI, auth_token } from '../../utils/api';
 import moment from 'moment/moment';
+import axios from 'axios';
+import { BASE_API_URL } from '../../config/constant';
+import { CSVLink } from 'react-csv';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
-import { Button, Col, Row, Alert, Collapse, Card, Form, Dropdown, DropdownButton, ButtonGroup, Badge } from 'react-bootstrap';
+import { Button, Col, Row, Alert, Collapse, Card, Form, Dropdown, DropdownButton, ButtonGroup, Badge, Modal } from 'react-bootstrap';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import SampleCSV from '../../assets/sample_data.zip';
 
 const Employee = () => {
+  const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [showMsg, setShowMsg] = useState('');
+  const [csvUpload, setCSVUpload] = useState(false);
+  const [filename, setFilename] = useState('');
   const [name, setName] = useState('');
   const [department, setDepartment] = useState(0);
   const [departments, setDepartments] = useState([]);
@@ -15,11 +24,32 @@ const Employee = () => {
   const [workingType, setWorkingType] = useState(0);
   const [status, setStatus] = useState(0);
   const [employees, setEmployees] = useState([]);
+  const [csvData, setCSVData] = useState([]);
+
+  let csvHeaders = [
+    { label: 'No', key: 'no' },
+    { label: '社員番号', key: 'employee_number' },
+    { label: '勤務形態', key: 'working_type_label' },
+    { label: '氏名', key: 'name' },
+    { label: '部署', key: 'department_name' },
+    { label: 'メールアドレス', key: 'email' },
+    { label: '残り有休日数', key: 'paid_holidays' },
+    { label: '残り特休日数', key: 'special_holidays' },
+    { label: '有休取得率', key: 'acquisition_rate' },
+    { label: '有休付与予定日', key: 'grant_date' },
+    { label: '入社日', key: 'hire_date' },
+    { label: '退職', key: 'resignation' },
+    { label: '休職', key: 'leave_of_absence' },
+    { label: 'メモ', key: 'note' }
+  ];
 
   useEffect(() => {
     getDepartment();
     getEmployee();
   }, []);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const getDepartment = async () => {
     await yukAPI('department_list', {}, 'post', auth_token)
@@ -39,7 +69,19 @@ const Employee = () => {
     await yukAPI('employee_list', {}, 'post', auth_token)
       .then((res) => {
         if (res.data.status === 'success') {
-          console.log(res.data.data);
+          let data = res.data.data;
+          for (let i = 0; i < data.length; i++) {
+            data[i].no = i + 1;
+            data[i].hire_date = moment(data[i].hire_date).format('YYYY/MM/DD');
+            if (data[i].status === 1) {
+              data[i].leave_of_absence = data[i].status_label;
+              data[i].resignation = '';
+            } else if (data[i].status === 2) {
+              data[i].leave_of_absence = '';
+              data[i].resignation = data[i].status_label;
+            }
+          }
+          setCSVData(data);
           setEmployees(res.data.data);
         } else {
           console.log(res.data.msg);
@@ -51,7 +93,8 @@ const Employee = () => {
   };
 
   const searchEmployee = async () => {
-    await yukAPI('employee_list',
+    await yukAPI(
+      'employee_list',
       {
         name: name,
         department: department,
@@ -85,8 +128,57 @@ const Employee = () => {
     setOpen(false);
   };
 
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+    setFilename(`C:\\fakepath\\` + event.target.files[0].name);
+  };
+
+  const handleCSVFile = async () => {
+    if (file) {
+      setCSVUpload(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      let config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      console.log(BASE_API_URL + 'csv_create_employee');
+      await axios
+        .post(BASE_API_URL + 'csv_create_employee', formData, config)
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.status === 'success') {
+            console.log('uploaded');
+          } else {
+            setShow(false);
+            setShowMsg(response.data.msg);
+          }
+          setCSVUpload(false);
+          setFilename('');
+        })
+        .catch((error) => {
+          console.log(error);
+          setShow(false);
+          setCSVUpload(false);
+          setFilename('');
+        });
+    } else {
+      setShow(false);
+      setFilename('');
+      setShowMsg('ファイルをアップロードしてください');
+    }
+  };
+
   return (
     <React.Fragment>
+      <Row>
+        <Col sm={12} md={12}>
+          <Alert variant="danger" show={showMsg} onClick={() => setShowMsg('')} dismissible>
+            {showMsg}
+          </Alert>
+        </Col>
+      </Row>
       <Row>
         <Col sm={12} md={12}>
           <Alert variant="info" dismissible>
@@ -123,14 +215,21 @@ const Employee = () => {
             className="text-capitalize"
             style={{ verticalAlign: 'top' }}
           >
-            <Dropdown.Item eventKey="1">
+            <Dropdown.Item eventKey="1" onClick={handleShow}>
               <i className="feather icon-file-plus me-2"></i>
               CSVで社員を登録
             </Dropdown.Item>
-            <Dropdown.Item eventKey="2">
+            <CSVLink
+              className="text-muted dropdown-item"
+              id="fileDownload"
+              data={csvData}
+              headers={csvHeaders}
+              filename={`${moment(new Date()).format('YYYY_MM_DD')}_people.csv`}
+              target="_blank"
+            >
               <i className="feather icon-file-minus me-2"></i>
               社員情報をCSVでエクスポート
-            </Dropdown.Item>
+            </CSVLink>
           </DropdownButton>
         </Col>
       </Row>
@@ -150,9 +249,11 @@ const Employee = () => {
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Label>所属部署</Form.Label>
                       <Form.Select aria-label="Default select example" onChange={(e) => setDepartment(e.target.value)}>
-                        <option value={""}></option>
+                        <option value={''}></option>
                         {departments.map((department, idx) => (
-                          <option key={idx} value={department.id}>{department.name}</option>
+                          <option key={idx} value={department.id}>
+                            {department.name}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -182,9 +283,24 @@ const Employee = () => {
                 <Row>
                   <Col sm={12}>
                     <div className="d-flex">
-                      <Form.Check type="checkbox" className="m-r-10" label="在職中" onClick={(e) => setStatus(e.target.checked ? 0 : status)} />
-                      <Form.Check type="checkbox" className="m-r-10" label="休職中" onClick={(e) => setStatus(e.target.checked ? 1 : status)} />
-                      <Form.Check type="checkbox" className="m-r-10" label="退職済み" onClick={(e) => setStatus(e.target.checked ? 2 : status)} />
+                      <Form.Check
+                        type="checkbox"
+                        className="m-r-10"
+                        label="在職中"
+                        onClick={(e) => setStatus(e.target.checked ? 0 : status)}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        className="m-r-10"
+                        label="休職中"
+                        onClick={(e) => setStatus(e.target.checked ? 1 : status)}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        className="m-r-10"
+                        label="退職済み"
+                        onClick={(e) => setStatus(e.target.checked ? 2 : status)}
+                      />
                     </div>
                   </Col>
                 </Row>
@@ -224,7 +340,9 @@ const Employee = () => {
                   {employees.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>
-                        <i>{item.employee_number}&nbsp;{item.department_name ? item.department_name : ''}</i>
+                        <i>
+                          {item.employee_number}&nbsp;{item.department_name ? item.department_name : ''}
+                        </i>
                         <br />
                         <Link href="#">
                           {item.name}
@@ -233,26 +351,30 @@ const Employee = () => {
                       </Td>
                       <Td>{item.email}</Td>
                       <Td>
-                        <span>1日と6時間 / 0日と2時間</span>
+                        <span>
+                          {item.paid_holidays} / {item.special_holidays}
+                        </span>
                         <br />
-                        <Badge bg={'danger'}>
-                          特休消化の異常
-                        </Badge>
+                        <Badge bg={'danger'}>特休消化の異常</Badge>
                       </Td>
-                      <Td>2022/09/01</Td>
-                      <Td>12 %</Td>
+                      <Td>{item.grant_date}</Td>
+                      <Td>{item.acquisition_rate}</Td>
                       <Td>
                         <span>{moment(item.hire_date).format('YYYY/MM/DD')}</span>
                         <br />
                         <span>{item.working_type_label}</span>
                         <br />
-                        <Badge bg={'primary'}>
-                          {item.status_label}
-                        </Badge>
+                        {item.status === 0 ? (
+                          <Badge bg={'primary'}>{item.status_label}</Badge>
+                        ) : item.status === 1 ? (
+                          <Badge bg={'success'}>{item.status_label}</Badge>
+                        ) : (
+                          <Badge bg={'danger'}>{item.status_label}</Badge>
+                        )}
                       </Td>
                       <Td>
                         <div>
-                          <Button href="/treat_single" variant={'success'} className="text-capitalize" size="sm">
+                          <Button href={`/treat_single/${item.id}`} variant={'success'} className="text-capitalize" size="sm">
                             休暇管理
                           </Button>
                           <Button href="/remaining_days/form" variant={'primary'} className="text-capitalize" size="sm">
@@ -268,6 +390,39 @@ const Employee = () => {
           </Card>
         </Col>
       </Row>
+      <Modal show={show} onHide={handleClose} keyboard={false}>
+        <Modal.Header>
+          <Modal.Title>ファイルをアップロードしてください。</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col md={11} sm={11} style={{ margin: 'auto' }}>
+              <input type="file" className="custom-file-input" id="inputFile" onChange={handleChange} />
+              <label className="custom-file-label" htmlFor="inputFile" id="file_name">
+                {filename ? filename : 'CSVファイルをアップロードしてください。'}
+              </label>
+              <hr />
+            </Col>
+            <Col md={11} sm={11} style={{ margin: 'auto' }}>
+              <div className="m-t-30">
+                <Link to={SampleCSV} target="_blank" download>
+                  サンプルデータ
+                </Link>
+                に沿ってCSVファイルを作成してください。
+              </div>
+              <hr />
+            </Col>
+          </Row>
+          <div className="text-end">
+            <Button variant="primary" size="sm" onClick={handleCSVFile} disabled={csvUpload}>
+              保存する
+            </Button>
+            <Button variant="secondary" size="sm" onClick={handleClose}>
+              キャンセル
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </React.Fragment>
   );
 };

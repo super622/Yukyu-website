@@ -87,13 +87,19 @@ const menuItems = {
             title: '',
             type: 'label-info feather icon-unlock rounded-pill'
           },
-          url: '/dashboard',
+          url: '/treat_single',
           children: [
             {
               id: 'treat-single',
               title: '個別付与・消化',
               type: 'item',
               url: '/treat_single'
+            },
+            {
+              id: 'treat-single',
+              title: '個別付与・消化',
+              type: '',
+              url: '/treat_single/:id'
             },
             {
               id: 'treat-multiple',
