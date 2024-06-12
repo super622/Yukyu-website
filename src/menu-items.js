@@ -102,6 +102,18 @@ const menuItems = {
               url: '/treat_single/:id'
             },
             {
+              id: 'absent-day',
+              title: '欠勤登録',
+              type: '',
+              url: '/absent_day/new/:id'
+            },
+            {
+              id: 'absent-day',
+              title: '欠勤登録',
+              type: '',
+              url: '/absent_day/:id'
+            },
+            {
               id: 'treat-multiple',
               title: '一斉付与・消化',
               type: 'item',

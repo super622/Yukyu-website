@@ -1136,6 +1136,12 @@ p.text-muted {
   color: #111;
 }
 
+@media screen and (max-width: 425px) {
+  .user-detail-name {
+      font-size: 2rem;
+  }
+}
+
 .user-detail-kana {
   word-break: break-all;
   margin-bottom: 1rem;
@@ -1207,4 +1213,8 @@ p.text-muted {
   label {
     padding-top: 0 !important;
   }
+}
+
+.h-100 {
+  height: 100%;
 }

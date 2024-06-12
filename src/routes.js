@@ -197,6 +197,16 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/absent_day/new/:id',
+        element: lazy(() => import('./views/leavemanagement/createAbsentday'))
+      },
+      {
+        exact: 'true',
+        path: '/absent_day/:id',
+        element: lazy(() => import('./views/leavemanagement/editAbsentday'))
+      },
+      {
+        exact: 'true',
         path: '/basic/badges',
         element: lazy(() => import('./views/ui-elements/basic/BasicBadges'))
       },
