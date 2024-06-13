@@ -120,10 +120,22 @@ const menuItems = {
               url: '/treat_multiple'
             },
             {
-              id: 'management-book',
+              id: 'management_book',
               title: '年次有給休暇管理簿',
               type: 'item',
               url: '/management_book'
+            },
+            {
+              id: 'management_book_detail',
+              title: '年次有給休暇管理簿',
+              type: 'item',
+              url: '/management_book/:id'
+            },
+            {
+              id: 'management_book_print',
+              title: '年次有給休暇管理簿',
+              type: 'item',
+              url: '/management_book/print/:id'
             },
             {
               id: 'overall-history',

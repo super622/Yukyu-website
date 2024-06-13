@@ -182,8 +182,18 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/management_book/:id',
+        element: lazy(() => import('./views/leavemanagement/paidleavmanagebook'))
+      },
+      {
+        exact: 'true',
         path: '/management_book',
         element: lazy(() => import('./views/leavemanagement/paidleavmanagebook'))
+      },
+      {
+        exact: 'true',
+        path: '/management_book/print/:id',
+        element: lazy(() => import('./views/leavemanagement/paidleavemanagebookprint'))
       },
       {
         exact: 'true',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { DatePicker } from 'rsuite';
+import Swal from 'sweetalert2';
 import { yukAPI, auth_token, goRedirect } from '../../utils/api';
 import jaJp from 'rsuite/locales/ja_JP';
 import 'rsuite/DatePicker/styles/index.css';
@@ -22,7 +23,6 @@ const EditAbsentday = () => {
 
   useEffect(() => {
     getData();
-    console.log(userData);
   }, []);
 
   const getData = async () => {
@@ -49,7 +49,7 @@ const EditAbsentday = () => {
     document.getElementById('absenceUnit').selectedIndex = 8 - unit;
   };
 
-  const saveEmployee = async () => {
+  const saveData = async () => {
     await yukAPI(
       'update_absenceregistration',
       {
@@ -69,6 +69,39 @@ const EditAbsentday = () => {
           goRedirect('/treat_single/' + userData.id);
         } else {
           setShowMsg(res.data.msg);
+          console.log(res.data.msg);
+        }
+      })
+      .catch((e) => {
+        console.log('Login request error => ', e);
+      });
+  };
+
+  const removeAlert = () => {
+    Swal.fire({
+      title: '本当に削除しますか?',
+      text: '',
+      icon: 'error',
+      showCancelButton: true,
+      cancelButtonColor: '#e8e8e8',
+      confirmButtonColor: '#f44236',
+      iconColor: '#f44236',
+      confirmButtonText: '削除する',
+      cancelButtonText: 'キャンセル',
+      reverseButtons: true
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        removeData();
+      }
+    });
+  };
+
+  const removeData = async () => {
+    await yukAPI('remove_absenceregistration', { id: params.id }, 'post', auth_token)
+      .then((res) => {
+        if (res.data.status === 'success') {
+          goRedirect('/treat_single/' + userData.id);
+        } else {
           console.log(res.data.msg);
         }
       })
@@ -163,7 +196,7 @@ const EditAbsentday = () => {
                     <Button href={`/treat_single/${userData.id}`} variant={'light'} className="text-capitalize">
                       キャンセル
                     </Button>
-                    <Button variant={'primary'} className="text-capitalize" onClick={saveEmployee}>
+                    <Button variant={'primary'} className="text-capitalize" onClick={saveData}>
                       登録する
                     </Button>
                   </div>
@@ -171,6 +204,16 @@ const EditAbsentday = () => {
               </Row>
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={8} className="center-card">
+          <hr />
+          <div className="text-end">
+            <Button variant={'danger'} className="text-capitalize" onClick={removeAlert}>
+              削除
+            </Button>
+          </div>
         </Col>
       </Row>
     </React.Fragment>

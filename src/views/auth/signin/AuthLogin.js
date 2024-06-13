@@ -23,6 +23,9 @@ const AuthLogin = ({ setMsg, setMsgType }) => {
         }
       })
       .catch((e) => {
+        setMsg('サーバーエラー');
+        setMsgType('danger');
+        setIsSubmited(false);
         console.log('Login request error => ', e);
       });
   };

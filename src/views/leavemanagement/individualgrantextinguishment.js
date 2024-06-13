@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Badge, Collapse } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
+import moment from 'moment';
 import { yukAPI, auth_token } from '../../utils/api';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import CanvasJSReact from '@canvasjs/react-charts';
@@ -10,22 +11,20 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const IndividualGrantExtinguishment = () => {
   let params = useParams();
+  let initEmp = {
+    id: '',
+    name: ' '
+  };
   const [open, setOpen] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [showLeftEmp, setShowLeftEmp] = useState(false);
-  const [department, setDepartment] = useState('');
+  const [showLeftEmp, setShowLeftEmp] = useState(2);
+  const [department, setDepartment] = useState(0);
   const [search, setSearch] = useState('');
   const [empList, setEmpList] = useState([]);
-  // const [curData, setCurData] = useState([]);
-  // const [prevEmp, setPrevEmp] = useState({
-  //   id: '',
-  //   name: ''
-  // });
-  // const [nextEmp, setNextEmp] = useState({
-  //   id: '',
-  //   name: ''
-  // });
+  const [curData, setCurData] = useState([]);
+  const [prevEmp, setPrevEmp] = useState(initEmp);
+  const [nextEmp, setNextEmp] = useState(initEmp);
 
   const options = {
     theme: 'light2',
@@ -41,20 +40,20 @@ const IndividualGrantExtinguishment = () => {
         name: 'GBP',
         showInLegend: true,
         xValueFormatString: 'YYYY',
-        yValueFormatString: '₹#,##0.##',
+        yValueFormatString: '$#,##0.##',
         dataPoints: [
-          { x: new Date('2017- 01- 01'), y: 84.927 },
-          { x: new Date('2017- 02- 01'), y: 82.609 },
-          { x: new Date('2017- 03- 01'), y: 81.428 },
-          { x: new Date('2017- 04- 01'), y: 83.259 },
-          { x: new Date('2017- 05- 01'), y: 83.153 },
-          { x: new Date('2017- 06- 01'), y: 84.18 },
-          { x: new Date('2017- 07- 01'), y: 84.84 },
-          { x: new Date('2017- 08- 01'), y: 82.671 },
-          { x: new Date('2017- 09- 01'), y: 87.496 },
-          { x: new Date('2017- 10- 01'), y: 86.007 },
-          { x: new Date('2017- 11- 01'), y: 87.233 },
-          { x: new Date('2017- 12- 01'), y: 86.276 }
+          { x: new Date('2017-01-01'), y: 5 },
+          { x: new Date('2017-02-01'), y: 8 },
+          { x: new Date('2017-03-01'), y: 8 },
+          { x: new Date('2017-04-01'), y: 7 },
+          { x: new Date('2017-05-01'), y: 7 },
+          { x: new Date('2017-06-01'), y: 7 },
+          { x: new Date('2017-07-01'), y: 7 },
+          { x: new Date('2017-08-01'), y: 7 },
+          { x: new Date('2017-09-01'), y: 8 },
+          { x: new Date('2017-10-01'), y: 8 },
+          { x: new Date('2017-11-01'), y: 8 },
+          { x: new Date('2017-12-01'), y: 8 }
         ]
       },
       {
@@ -62,20 +61,20 @@ const IndividualGrantExtinguishment = () => {
         name: 'USD',
         showInLegend: true,
         xValueFormatString: 'YYYY',
-        yValueFormatString: '₹#,##0.##',
+        yValueFormatString: '$#,##0.##',
         dataPoints: [
-          { x: new Date('2017- 01- 01'), y: 67.515 },
-          { x: new Date('2017- 02- 01'), y: 66.725 },
-          { x: new Date('2017- 03- 01'), y: 64.86 },
-          { x: new Date('2017- 04- 01'), y: 64.29 },
-          { x: new Date('2017- 05- 01'), y: 64.51 },
-          { x: new Date('2017- 06- 01'), y: 64.62 },
-          { x: new Date('2017- 07- 01'), y: 64.2 },
-          { x: new Date('2017- 08- 01'), y: 63.935 },
-          { x: new Date('2017- 09- 01'), y: 65.31 },
-          { x: new Date('2017- 10- 01'), y: 64.75 },
-          { x: new Date('2017- 11- 01'), y: 64.49 },
-          { x: new Date('2017- 12- 01'), y: 63.84 }
+          { x: new Date('2017-01-01'), y: 7 },
+          { x: new Date('2017-02-01'), y: 7 },
+          { x: new Date('2017-03-01'), y: 6 },
+          { x: new Date('2017-04-01'), y: 6 },
+          { x: new Date('2017-05-01'), y: 6 },
+          { x: new Date('2017-06-01'), y: 6 },
+          { x: new Date('2017-07-01'), y: 6 },
+          { x: new Date('2017-08-01'), y: 6 },
+          { x: new Date('2017-09-01'), y: 7 },
+          { x: new Date('2017-10-01'), y: 6 },
+          { x: new Date('2017-11-01'), y: 6 },
+          { x: new Date('2017-12-01'), y: 6 }
         ]
       }
     ]
@@ -86,16 +85,23 @@ const IndividualGrantExtinguishment = () => {
     getEmployeeInfo();
     getEmpData();
     getDepData();
-    console.log(showLeftEmp, department, empList);
-    console.log(typeof params.id);
-    handleSearch();
-  }, []);
+  }, [params]);
 
   const getEmployeeInfo = async () => {
-    await yukAPI('show_employee', { id: params.id}, 'post', auth_token)
+    await yukAPI('show_employee', { id: params.id }, 'post', auth_token)
       .then((res) => {
         if (res.data.status === 'success') {
-          setEmployees(res.data.data);
+          setCurData(res.data.data);
+          if (res.data.prev) {
+            setPrevEmp(res.data.prev);
+          } else {
+            setPrevEmp(initEmp);
+          }
+          if (res.data.next) {
+            setNextEmp(res.data.next);
+          } else {
+            setNextEmp(initEmp);
+          }
         } else {
           console.log(res.data.msg);
         }
@@ -110,6 +116,7 @@ const IndividualGrantExtinguishment = () => {
       .then((res) => {
         if (res.data.status === 'success') {
           setEmployees(res.data.data);
+          handleSearch(res.data.data, department, showLeftEmp, search);
         } else {
           console.log(res.data.msg);
         }
@@ -133,14 +140,22 @@ const IndividualGrantExtinguishment = () => {
       });
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (employees, dep, left, empName) => {
     let data = [];
     for (let i = 0; i < employees.length; i++) {
-      if (employees[i].name.includes(search)) {
-        continue;
+      if (dep !== 0) {
+        if (employees[i].department_id !== dep) {
+          continue;
+        }
+      }
+      if (employees[i].name.includes(empName) && employees[i].status < left) {
+        data.push(employees[i]);
       }
     }
     setEmpList(data);
+    setDepartment(dep);
+    setShowLeftEmp(left);
+    setSearch(empName);
   };
 
   return (
@@ -149,25 +164,37 @@ const IndividualGrantExtinguishment = () => {
         <Col lg={4} xl={4}>
           <Row className="mb-2">
             <Col className="gap-2 mt-2 pe-1 col-6">
-              <Button href="#" variant={'outline-dark'} className="text-truncate m-0 w-100">
+              <Button
+                href={`/treat_single/${prevEmp.id}`}
+                variant={'outline-dark'}
+                className="text-truncate m-0 w-100 h-100"
+                disabled={prevEmp.id === ''}
+                style={prevEmp.id === '' ? { opacity: 0.2 } : {}}
+              >
                 <i className="feather icon-chevron-left position-relative pe-1" style={{ top: '4px', float: 'left' }}></i>
-                辻本 尚子
+                {prevEmp.name}
               </Button>
             </Col>
             <Col className="gap-2 mt-2 ps-1 col-6">
-              <Button href="#" variant={'outline-primary'} className="text-truncate m-0 w-100">
+              <Button
+                href={`/treat_single/${nextEmp.id}`}
+                variant={'outline-primary'}
+                className="text-truncate m-0 w-100 h-100"
+                disabled={nextEmp.id === ''}
+                style={nextEmp.id === '' ? { opacity: 0.2 } : {}}
+              >
                 <i
                   className="feather icon-chevron-right position-relative"
                   style={{ top: '4px', float: 'right', marginLeft: '12px', marginRight: '0px' }}
                 ></i>
-                辻本 尚子
+                {nextEmp.name}
               </Button>
             </Col>
           </Row>
           <Card>
             <Card.Body>
-              <Form.Select onChange={(e) => setDepartment(e.target.value)}>
-                <option value="">全ての部署</option>
+              <Form.Select onChange={(e) => handleSearch(employees, parseInt(e.target.value), showLeftEmp, search)}>
+                <option value={0}>全ての部署</option>
                 {departments.map((item, idx) => (
                   <option value={item.id} key={idx}>
                     {item.name}
@@ -182,19 +209,24 @@ const IndividualGrantExtinguishment = () => {
                     ame="group1"
                     className="m-r-10"
                     label={'退職者を表示する'}
-                    onClick={(e) => setShowLeftEmp(e.target.checked)}
+                    onClick={(e) => handleSearch(employees, department, e.target.checked ? 3 : 2, search)}
                   />
                 </Col>
               </Row>
               <hr />
               <Row>
                 <Col sm={12}>
-                  <Form.Control type="input" placeholder="氏名 / 社員番号" value={search} onChange={(e) => setSearch(e.target.value)} />
+                  <Form.Control
+                    type="input"
+                    placeholder="氏名 / 社員番号"
+                    value={search}
+                    onChange={(e) => handleSearch(employees, department, showLeftEmp, e.target.value)}
+                  />
                 </Col>
               </Row>
               <div className="mt-2">
                 <div className="user-list">
-                  {employees.map((item, idx) => (
+                  {empList.map((item, idx) => (
                     <Link key={idx} to={`/treat_single/${item.id}`}>
                       <div
                         className={
@@ -220,27 +252,35 @@ const IndividualGrantExtinguishment = () => {
           <Card>
             <Card.Body className="border-bottom">
               <Row className="d-flex align-items-center">
-                <Col md={'auto'}>
+                <Col className="col-auto">
                   <i className="feather icon-user f-40 text-green-300"></i>
                 </Col>
                 <Col>
                   <Row className="d-flex align-items-center">
                     <Col sm={12}>
-                      <span></span>
-                      <span className="float-right text-muted ms-2">社員番号：-</span>
+                      <span>{curData.department_label}</span>
+                      <span className="float-right text-muted ms-2">
+                        社員番号： {curData.employee_number ? curData.employee_number : '-'}
+                      </span>
                     </Col>
                   </Row>
                   <div className="d-flex flex-wrap f-w-300 align-items-end">
-                    <Link to="#">
+                    <Link to={`/employee/${curData.id}`}>
                       <div className="d-flex">
-                        <div className="user-detail-name">出水 亜須加</div>
+                        <div className="user-detail-name">{curData.name}</div>
                         <i className="feather icon-info mt-2 ms-2"></i>
                       </div>
                     </Link>
                   </div>
-                  <div className="user-detail-kana"></div>
+                  <div className="user-detail-kana">{curData.kana_name}</div>
                   <span className="d-block">
-                    <Badge bg={'primary'}>在職中</Badge>
+                    {curData.status === 0 ? (
+                      <Badge bg={'primary'}>在職中</Badge>
+                    ) : curData.status === 1 ? (
+                      <Badge bg={'success'}>休職中</Badge>
+                    ) : (
+                      <Badge bg={'info'}>退職済み</Badge>
+                    )}
                   </span>
                 </Col>
               </Row>
@@ -248,11 +288,11 @@ const IndividualGrantExtinguishment = () => {
             <Card.Body>
               <Row className="d-flex align-items-center">
                 <Col sm={12} className="py-1">
-                  <span>勤務形態: パート(週4日)</span>
+                  <span>勤務形態: {curData.working_type_label}</span>
                   <span className="float-right text-muted"></span>
                 </Col>
                 <Col sm={12} className="py-1">
-                  <span>入社日: 2022/09/01</span>
+                  <span>入社日: {moment(curData.hire_date).format('YYYY/MM/DD')}</span>
                   <span className="float-right text-muted"></span>
                 </Col>
                 <Col sm={12} className="py-1 d-flex flex-wrap">
@@ -283,6 +323,9 @@ const IndividualGrantExtinguishment = () => {
                   <span>有休取得率: 12 %</span>
                 </Col>
                 <Col sm={12} className="py-1">
+                  <span>時間単位の有休取得上限: 40時間(年5日分)</span>
+                </Col>
+                <Col sm={12} className="py-1">
                   <span>時間単位の有休取得合計(今回分): 0 時間 ※半日(4時間)も含まれています</span>
                 </Col>
               </Row>
@@ -295,7 +338,7 @@ const IndividualGrantExtinguishment = () => {
               <Button href="#" variant={'warning'}>
                 休暇消化
               </Button>
-              <Button href="#" variant={'outline-danger'}>
+              <Button href={`/absent_day/new/${curData.id}`} variant={'outline-danger'}>
                 欠勤登録
               </Button>
             </Card.Body>
